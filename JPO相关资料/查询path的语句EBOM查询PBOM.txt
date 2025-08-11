@@ -1,0 +1,10 @@
+query path type SemanticRelation endwithany "+EBOM物理Id+" select owner.to.from.physicalId dump"
+
+查询的是PBOM的物理Id
+
+附从PBOM查EBOM Pbom是装配制造体， EBOM是
+List constructList = DELJConfigurationServices.getAttachedModels(context,PBOM的id)；
+Iterator var1 = constructList .iterator();
+while(var1.hasNext()){
+	resultId = (String)var1.next();
+}

@@ -1,0 +1,4 @@
+Input Type   checkbox 复选框 选择的多个对象的话值使用   ，隔开
+Input Type   combobox 下拉单选框
+Input Type  textbox 普通文本框
+Input Type  textarea  文本域

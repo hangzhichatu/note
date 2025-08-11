@@ -1,0 +1,20 @@
+一般不推荐修改默认值，只添加新的值
+DomainAccess文件的结构类似xml文件，通过标签的形式添加
+
+举例，在DomainAccess标签内这样一个可选值。 Change Request 类对应的生命周期   <logicalMappings>里面存放多个logical physical标签
+logical physical标签 ，read,show,checkout,modify,fromconnect,toconnect,fromdisconnect,todisconnect这些是权限，Can Add Remove是该权限的
+后台默认值(掩码)，其前端显示的值在emxFramworkStringResourced的配置文件中配置
+具体配置值如下
+emxFramework.Access.CanAddRemove=/us23d/us234 (unicode码,注如果掩码有空格，后台配置配置文件时候，空格省略)
+
+
+
+<policy>Change Request
+        <logicalMappings>
+           <logical physical="read,show,checkout,modify,fromconnect,toconnect,fromdisconnect,todisconnect">Can Add Remove</logical>
+           <logical physical="read,show,checkout,modify,fromconnect,toconnect,fromdisconnect,todisconnect,checkin">Admin</logical>
+        </logicalMappings>
+        <accessMasksInheritanceLimit></accessMasksInheritanceLimit>
+</policy>
+
+添加修改导入后，还需要重启服务器才能生效

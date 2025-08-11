@@ -1,0 +1,9 @@
+../common/emxFullSearch.jsp?field=TYPES=type_TaskManagement,type_ProjectSpace,type_ProjectTemplate:CURRENT!=policy_ProjectTemplate.state_Draft,policy_ProjectTemplate.state_InApproval,policy_ProjectTemplate.state_Obsolete:Type!=type_Experiment,type_ProjectBaseline,type_VPLMTask,type_PQPTask:CURRENT!=Inactive:TSK_TASK_HAS_CONTEXT!=NO_CONTEXT&table=PMCProjectSummaryForProjects&multiColumnSort=false&sortColumnName=ID&selection=multiple&excludeOIDprogram=BP_TemplateTaskPhaseSpace:getExcludeOIDForTemplateTaskPhaseSpace&expandProgram=emxTask:getSubTasks&submitAction=refreshCaller&hideHeader=true&showInitialResults=false&suiteKey=ProgramCentral&cancelLabel=emxProgramCentral.Common.Close&showRMB=false&submitURL=../programcentral/emxProgramCentralUtil.jsp?mode=copyScheduleSearchPreProcess
+
+参考连接：如上这里介绍常见的设置的作用
+
+field=TYPES=type_TaskManagement***  searc筛选type类型为后续跟着的类型的对象（以及其子类型的对象），如果不想搜索其字
+类型的对象，TYPE替换TYPES 类型用注册名称
+CURRENT!=policy_ProjectTemplate.state_Draft 成熟度筛选，成熟度用注册名称
+excludeOIDprogram=BP_TemplateTaskPhaseSpace:getExcludeOIDForTemplateTaskPhaseSpace，更具JPO的返回值，排除这些
+id的对象，执行的JPO可以获取上下文的objectId和context对象等

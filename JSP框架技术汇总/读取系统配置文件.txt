@@ -1,0 +1,2 @@
+EnoviaResourceBundle.getProperty(context, "emxFramework.ENOBUPS_AP.HomePage");
+这个方法会读取emxSystem.properties里面的配置文件内容

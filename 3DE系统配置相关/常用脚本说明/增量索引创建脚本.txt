@@ -1,0 +1,4 @@
+参考路径：
+/dsplm/DassaultSystemes/R2020x/3DSpace/linux_a64/code/command/
+脚本名称FullTestSearch_partial_indexation.sh 
+作用，一般和定时任务配合使用，实现定时更新索引

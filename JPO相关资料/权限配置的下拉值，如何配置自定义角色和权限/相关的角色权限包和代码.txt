@@ -1,0 +1,14 @@
+import com.dassault_systemes.lifecycle.utils.DomainAccess;//权限的包
+
+DomainAccess.getLogicalNames(context,strObjectId);
+
+Stringlist TypeRoleAccess = DomainAccess.getLogicalNames(context,strObjectId);//strObjectId是实例对象的该方法会返回该对象的policy对应的DomainAccess配置的角色掩码，如果没有配置，会返回Default的7种角色
+
+String physicalMask = DomainAccess.getPhysicalAccessMasks(context,objectId,access);//access就是掩码objectid是待添加角色I该方法会返回掩码代表的具体权限如，read,view,checkin,checkout这类权限
+
+DomainAccess.createObjectOwnership(context,objectId,org,project,access,comment,true);
+org可以为空（组织）
+project是上下文凭证，如果是人员的话就是类似这样的  19010001_PRJ
+comment 有个最常用的参考值 Multiple Ownership For Object 这个表示添加若干权限(all则表示添加所有权限)
+
+等价的Mql语句如下： mod bus objectId add ownership "-" "19010001_PRJ" "Multiple Ownership  For Object" as "read,view,show,checkin,checkout";//这类org为空所以“-”表示

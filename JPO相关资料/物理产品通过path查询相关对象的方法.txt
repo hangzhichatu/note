@@ -1,0 +1,6 @@
+//获取关系VPLMrel/PLMConnection/V_Owner关联对象的Id
+expand bus id rel 'VPLMrel/PLMConnection/V_Owner' select bus id dump ,;
+
+查询关联对象上的path  DELFmiProcessImplementCnx  这个类型的对象是专门负责存path的
+
+print bus DELFmiProcessImplementCnx  上一句查询的id  '' select paths[SemanticRelation].path.dump;

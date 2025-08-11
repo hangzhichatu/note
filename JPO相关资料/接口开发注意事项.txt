@@ -1,0 +1,21 @@
+新建context 
+方法1（如果只是需要user Agent可以调用这个方法）
+
+matrix.db.Context context = ContextUtil.getAnonymousContext(); //会校验是否有现有的JPO否则返回一个用户为空的context
+
+方法2 （涉及具体用户的）
+
+String host = PropertyUtil.getProperty("ematrix.server.host");
+Context context = new Context("用户",host);
+
+方法3  链接
+Context context = new Context(url);
+context.setUser(user);
+context.setPassword(pass);
+context.setRole(role);
+
+context.connect();
+JPOSupport.registerThread(context);
+
+//数据处理和方法尽量通过唤起JPO的方式实现否则调试时要频繁重启，不甚方便
+

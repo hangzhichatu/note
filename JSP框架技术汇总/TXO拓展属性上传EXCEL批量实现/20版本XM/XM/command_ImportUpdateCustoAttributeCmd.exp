@@ -1,0 +1,18 @@
+!MTRX!AD! command ImportUpdateCustoAttributeCmd "3DEXPERIENCE R2016x HotFix 10(25.0.0.1)"
+ImportUpdateCustoAttributeCmd "" emxDataSpecialization.label.ImportUpdate "" ../DataSpecialization/ImportUpdateCustoAttribute.jsp "" ""
+ 1
+ all
+ 0
+ 0 3
+ "%Registered Suite" NULL noname DataSpecialization 4
+ %Submit NULL noname true 4
+ "%Target Location" NULL noname popup 4
+"6/10/2019 3:40:56 PM" "6/14/2019 11:37:35 AM"
+4
+ 1 2 "6/10/2019 3:41:23 PM" creator "  modify command NLSEditorUpdateCmd label emxDataSpecialization.label.Edit remove setting \"Access Function\" remove setting \"Access Program\" remove setting \"Popup Modal\";"
+ 2 2 "6/10/2019 4:44:37 PM" creator "  modify command NLSEditorUpdateCmd name ImportUpdateCustoAttributeCmd href ../DataSpecialization/ImportUpdateCustoAttribute.jsp;"
+ 3 2 "6/14/2019 11:32:28 AM" creator "  modify command ImportUpdateCustoAttributeCmd label emxDataSpecialization.label.ImportNew;"
+ 4 2 "6/14/2019 11:37:35 AM" creator "  modify command ImportUpdateCustoAttributeCmd label emxDataSpecialization.label.ImportUpdate;"
+
+!MTRX!END
+

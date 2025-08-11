@@ -1,0 +1,22 @@
+!MTRX!AD! command ImportNewCustoAttributeCmd "3DEXPERIENCE R2016x HotFix 10(25.0.0.1)"
+ImportNewCustoAttributeCmd "" emxDataSpecialization.label.ImportNew "" ../DataSpecialization/ImportNewCustoAttribute.jsp "" ""
+ 1
+ all
+ 0
+ 0 6
+ "%Access Function" NULL noname accessEditCustoAttribute 4
+ "%Access Program" NULL noname emxPackagesConfigurationProgram 4
+ "%Popup Modal" NULL noname true 4
+ "%Registered Suite" NULL noname DataSpecialization 4
+ %Submit NULL noname true 4
+ "%Target Location" NULL noname popup 4
+"6/3/2019 5:04:37 PM" "6/14/2019 11:31:34 AM"
+5
+ 1 2 "6/3/2019 5:04:39 PM" creator "  modify command ImportNewCustoAttributeCmd;"
+ 2 2 "6/3/2019 5:33:23 PM" creator "  modify command ImportNewCustoAttributeCmd href ../csddc/ImportNewCustoAttribute.jsp remove setting Image add setting \"Target Location\" popup;"
+ 3 2 "6/3/2019 5:33:53 PM" creator "  modify command ImportNewCustoAttributeCmd href ImportNewCustoAttribute.jsp;"
+ 4 2 "6/3/2019 5:53:15 PM" creator "  modify command ImportNewCustoAttributeCmd href ../DataSpecialization/ImportNewCustoAttribute.jsp;"
+ 5 2 "6/14/2019 11:31:34 AM" creator "  modify command ImportNewCustoAttributeCmd label emxDataSpecialization.label.ImportNew;"
+
+!MTRX!END
+

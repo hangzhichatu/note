@@ -1,0 +1,4 @@
+三组代码例子，
+1通过勾选的行传递所勾选对象Id（多选）--AddDocumentToclass
+2通过request获取上下文ObjectId   -- 
+3通过勾选的行传递所勾选对象Id（单选带校验） AddDocumentFromProjectSpace

@@ -1,0 +1,2 @@
+可以在table界面配置这样的按钮，来使界面进入编辑模式
+ href 'javascript:editMode()' 该链接可以设置成此模式

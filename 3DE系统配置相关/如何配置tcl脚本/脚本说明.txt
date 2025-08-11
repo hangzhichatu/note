@@ -1,0 +1,60 @@
+这个 TCL 脚本的主要功能是执行一系列操作来查询和修改某个系统（可能是一个管理系统）的数据，具体逻辑如下：
+1. 打开输出文件
+
+tcl
+
+set output [open "objOutput.txt" w+]
+
+这行代码打开或创建一个名为 objOutput.txt 的文件，并准备写入数据。
+2. 执行查询
+
+tcl
+
+set classObjs [split [mql temp query bus Products * * where attribute\[HIS_ProductAffilatedCompany\]=='123' select id dump |]]
+
+这行代码使用 mql 命令执行一个查询，查询条件是 HIS_ProductAffilatedCompany 属性等于 '123'。查询结果被分割成一个列表，存储在 classObjs 变量中。
+3. 输出查询结果
+
+tcl
+
+puts "---$classObjs---"
+
+这行代码意图输出查询结果（
+4. 处理查询结果
+
+tcl
+
+set classObj [lindex $classObjs 0]
+if{$classObj !=""}{
+    set tmpInfo [split $classObj |]
+    set productId [lindex $tmplnfo 3]
+    if{$productId !=""}{
+        mql mod bus $productId  HIS_ProductAffiliatedCompany sss
+        puts $output "$classObj"    
+    }
+}
+
+    从 classObjs 列表中获取第一个元素并赋值给 classObj。
+    如果 classObj 不为空，则将其分割为 tmpInfo 列表。
+    从 tmpInfo 中获取第四个元素（索引为 3）作为 productId。
+    如果 productId 不为空，调用 mql mod 命令修改该产品的 HIS_ProductAffiliatedCompany 属性为 sss。
+    将 classObj 的内容写入到之前打开的输出文件中。
+
+5. 关闭输出文件
+
+tcl
+
+close $output
+
+最后，关闭文件以确保所有数据都已写入并释放资源。
+总结
+
+简而言之，这个 TCL 脚本的功能是：
+
+    查询与 HIS_ProductAffilatedCompany 属性为 '123' 相关的产品。
+    如果找到相关产品，获取其 productId。
+    修改该产品的 HIS_ProductAffiliatedCompany 属性为 sss。
+    将相关产品的信息写入到 objOutput.txt 文件中。
+
+
+tcl脚本可以视作将若干mql指令人工执行判断，给通过程序自动执行

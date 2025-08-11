@@ -1,0 +1,1 @@
+String previousId = print bus id select previous.id   //获取上一版本的id

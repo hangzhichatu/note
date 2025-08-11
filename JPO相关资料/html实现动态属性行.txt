@@ -1,0 +1,42 @@
+JPO方法：
+    public String getWorkUnderFormField(Context context, String[] args) throws Exception {
+        HashMap programMap = (HashMap) JPO.unpackArgs(args);
+        HashMap requestMap = (HashMap) programMap.get("requestMap");
+        String fromVPMid = (String) requestMap.get("fromVPMid");
+        StringBuilder html = new StringBuilder();
+        if (UIUtil.isNotNullAndNotEmpty(fromVPMid)) {
+            DomainObject object = new DomainObject(fromVPMid);
+            String GS_Keyattributes = object.getAttributeValue(context, "GS_Keyattributes");
+            String[] fieldNames = GS_Keyattributes.split("\\+");
+            // 转换为字段列表（label和name相同）
+            List<Map<String, String>> fields = Arrays.stream(fieldNames)
+                    .map(name -> {
+                        Map<String, String> field = new HashMap<>();
+                        String label = "";
+                        try {
+                            label = EnoviaResourceBundle.getAttributeI18NString(context, name, "zh_CN");
+                        } catch (MatrixException e) {
+                            e.printStackTrace();
+                        }
+                        field.put("label", label);
+                        field.put("name", name);
+                        return field;
+                    })
+                    .collect(Collectors.toList());
+            // 动态生成表单字段
+            for (Map<String, String> field : fields) {
+                String label = field.get("label");
+                String name = field.get("name");
+                html.append("<div style=\"margin-bottom: 10px;\">");
+                html.append("<label for=\"").append(name).append("\" style=\"display: inline-block; width: 100px;\">").append(label).append(":</label>");
+                html.append("<input type=\"text\" id=\"").append(name).append("\" name=\"").append(name).append("\"></input>");
+                html.append("</div>");
+            }
+        }
+        return html.toString();
+    }
+
+
+参考配置
+
+mod form GS_CreatePurchasedMatForm field name "attrTotal" businessobject '' label "emxFramework.Attribute.attrTotal" user all setting "Registered Suite" "Framework" setting "Field Type" "programHTMLOutput" setting "Input Type" "textbox" setting "Editable" "true" setting 'function' 'getWorkUnderFormField' setting 'program' 'GS_YFGLJPO' setting "Required" "true" setting 'Access Function' 'showFiled' setting 'Access Program' 'GS_YFGLJPO';

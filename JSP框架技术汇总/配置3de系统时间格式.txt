@@ -1,0 +1,10 @@
+修改方法：
+
+1.  找到服务器端3DSpace安装目录下的enovia.ini文件。在文件开始的位置添加MX_NORMAL_DATETIME_FORMAT=moy/dom/yr4 h24:min:sec
+
+ 
+
+2.  找到emxSystem.properties文件，一般位于3DSpace的tomee/webapps目录下面的3dspace/WEB-INF/classes/emxSystem.properties的大约1020行。
+
+eServiceSuites.eMatrixDateFormat = MM/dd/yyyy HH:mm:ss a
+eServiceSuites.eMatrixInputDateFormat = MM/dd/yyyy HH:mm:ss a

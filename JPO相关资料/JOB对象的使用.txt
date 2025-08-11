@@ -1,0 +1,10 @@
+声明JOB
+Job job = new Job("HIS_ProjectSpaceExport JPO名字","方法名字",String[] args,true); args是输入参数
+job.setTitle("Title1");//设置标题
+job.setDescription();//设置描述
+job.setAllowreexecute("Yes");//允许执行
+job.setActionOnCompletion("Archive");//完成成熟度
+job.setNotifyOwner("No");提醒所有者
+job.setProgressPercent(0);
+job.createAndSubmit(context);//创建并开始
+job.setStartData(context);//开始日期

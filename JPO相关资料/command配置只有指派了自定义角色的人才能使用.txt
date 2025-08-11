@@ -1,0 +1,8 @@
+command IMPImportRealityAffairCommand
+  description 
+  label 'emxFramework.Command.IMPImportRealityAffairCommand'
+  href '${COMMON_DIR}/IMPImportSJSW1.jsp'
+  setting Access Expression value context.user.isassigned[IMP_FZJJS] ==true
+  setting Registered Suite value Framework
+  setting Submit value true
+  setting Target Location value popup

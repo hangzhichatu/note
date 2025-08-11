@@ -1,0 +1,39 @@
+eval {
+    # 检查文件是否存在
+    set outputFile "objOutput.txt"
+    if {![file exists $outputFile]} {
+        set output [open $outputFile w+]
+    } else {
+        set output [open $outputFile a+]
+    }
+
+    set classObjs [split [mql temp query bus Products * * where attribute[HIS_ProductAffilatedCompany]=='123' select id dump |]]
+
+    puts "---$classObjs---"
+    set classObj [lindex $classObjs 0]
+
+    if {$classObj != ""} {
+        set tmpInfo [split $classObj |]
+        set productId [lindex $tmpInfo 3]
+
+        if {$productId != ""} {
+            puts "找到产品 ID: $productId"
+            puts "您是否希望修改此产品的属性？(yes/no)"
+            
+            # 读取用户输入
+            flush stdout
+            set userInput [gets stdin]
+
+            # 根据用户输入决定是否执行
+            if {[string equal $userInput "yes"]} {
+                mql mod bus $productId HIS_ProductAffiliatedCompany sss
+                puts $output "$classObj"
+                puts "产品属性已修改。"
+            } else {
+                puts "操作已取消。"
+            }
+        }
+    }
+
+    close $output
+}

@@ -1,0 +1,21 @@
+tcl;
+
+eval{
+	set output [open "objOutput.txt" w+]
+	set classObjs [split [mql temp query bus Products * * where attribute\[HIS_ProductAffilatedCompany\]=='123' select id dump |]\]
+	puts "---$classObjes---"
+	set classObj [lindex $classObjs 0]
+	if{$classObj !=""}{
+		set tmpInfo [split $classObj |]
+		set productId [lindex $tmplnfo 3]
+		if{$productId !=""}{
+			mql mod bus $productId  HIS_ProductAffiliatedCompany sss
+			puts $output "$classObj"	
+		}
+
+	}
+	close $output
+
+
+
+}

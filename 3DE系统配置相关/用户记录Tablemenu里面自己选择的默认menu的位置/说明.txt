@@ -1,0 +1,10 @@
+print person xxx !history;
+
+注意找一个property  MX_TABLEMENU_SELECTION (类似这种)里面会记载了所有有tablemenu的上次选择的table
+实际值的参考：
+property MX_TABLEMENU_SELECTION value {"tableMenu":[{"PMCWBSTableMenu":"PMCWBSViewTable"}],"selectedProgram":[{"LCLibraryList":"emxLibraryCentralUtil:getAllLibraries"},{"APPTaskSummary":"emxInboxTask:getCompletedTasks"},{"APPObjectRouteSummary":"emxRoute:getMyRoutes"},{"PMCProjectTemplateSummary":"emxProjectTemplateBase:getActiveProjectTemplates"},{"PMCProgramSummary":"emxProgram:getActivePrograms"},{"RMTRequirementSpecificationsList":"emxRequirementSpecification:getOwnedSpecsAndGroups"},{"PMCProjectSpaceMyDesk":"emxProjectSpace:getAllOtherProjects"},{"IssueList":"emxProgramCentralUtil:getAllContextIssues"}]}
+
+这里也提供下其他在人员上常见的property的作用
+ property IconMailLanguagePreference value en  邮件的语言
+
+

@@ -1,0 +1,16 @@
+前端的js实质
+
+<tr>
+	<td class = "label"><emxUtil:i18n localize="i18nId"> 汉化配置名称如emxFramwork.xx.xx.xx </emxUtil:i18n>  </td>
+	<td class = "inputField">
+		<input value id type="text" name="属性名称" size="20" title="<emxUtil:i18n localize = "i18nId">emxComponents.Common.LAMC_ConnectionSpareParts</emxUtil:i18n>" readonly />
+	<input type "hidden" name = "SparePartsName" /n>//这里两个hiddent的input是为了方便后续操作
+	<input type "hiddent name = "SparePartsOID" /n>
+	<input type "button" name = "SparePartsButton" value = ".." size = "5" onClick="showConnectionSpartsSelector()"/>
+	</td>
+</tr>
+
+//注点击的方法
+function showConnectionSpartsSelector(){
+	emxShowModalDialog("../common/emxFullSearch.jsp?field=TYPES=type_CreateAssembly,type_Provide&table=PMCCommonPersonSearchTable&form=PMCCommonPersonSearchForm&showInitialResults=true&selection=single&fieldNameActual=SparePartsName&fieldNameOID=SparePartsOID&fieldNameDisplay=LAMC_ConnectionSpareParts&suiteKey=Framework&submitURL=../AEFSearchUtil.jsp",'600','600','true','',"SparePartsOID");
+}

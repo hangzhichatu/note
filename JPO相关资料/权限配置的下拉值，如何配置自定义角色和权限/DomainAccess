@@ -1,0 +1,195 @@
+<domainAccess>
+    <policy>Default
+        <logicalMappings>
+            <logical physical="read,show" inheritedLogicalNames="">Basic</logical>
+            <logical physical="read,show,checkout" inheritedLogicalNames="">Read</logical>
+            <logical physical="read,show,checkout,modify,checkin,lock,unlock,revise,reserve,reserve,unreserve">Read Write</logical>
+            <logical physical="read,show,checkout,modify,checkin,lock,unlock,revise,fromconnect,toconnect,reserve,unreserve">Add</logical>
+            <logical physical="read,show,checkout,modify,checkin,lock,unlock,revise,fromdisconnect,todisconnect,delete,reserve,unreserve">Remove</logical>
+            <logical physical="read,show,checkout,modify,checkin,lock,unlock,revise,fromconnect,toconnect,fromdisconnect,todisconnect,delete,reserve,unreserve">Add Remove</logical>
+            <logical physical="read,show,checkout,modify,checkin,lock,unlock,revise,promote,demote,fromconnect,toconnect,fromdisconnect,todisconnect,delete,changeowner,changesov,reserve,unreserve">Full</logical>
+        </logicalMappings>
+        <accessMasksInheritanceLimit></accessMasksInheritanceLimit>
+    </policy>
+	 <policy>Workspace,Workspace Vaults,Document Release,Document,Workspace Template,Template Workspace Vault,Controlled Folder,Contract Part,Contract Section,Contract
+        <logicalMappings>
+			<logical physical="read,show" inheritedLogicalNames="">Viewer</logical>
+            <logical physical="read,show,checkout,toconnect,todisconnect" inheritedLogicalNames="">Reader</logical>
+            <logical physical="read,show,checkout,toconnect,todisconnect,modify,changename,changetype,checkin,fromconnect,fromdisconnect,lock,unlock,reserve,unreserve,revise,majorrevise" inheritedLogicalNames="">Author</logical>
+            <logical physical="read,show,checkout,toconnect,todisconnect,modify,changename,changetype,checkin,fromconnect,fromdisconnect,lock,unlock,reserve,unreserve,revise,majorrevise,delete,changesov,changeowner,promote,demote">Owner</logical>
+        </logicalMappings>
+        <accessMasksInheritanceLimit></accessMasksInheritanceLimit>
+    </policy>
+    <policy>Route,Route Template
+        <logicalMappings>
+            <logical physical="read,show,checkout" inheritedLogicalNames="">Read</logical>
+            <logical physical="read,show,checkout,modify,checkin,lock,unlock,revise,reserve,unreserve">Read Write</logical>
+            <logical physical="read,show,checkout,modify,checkin,lock,unlock,revise,fromconnect,toconnect,reserve,unreserve">Add</logical>
+            <logical physical="read,show,checkout,modify,checkin,lock,unlock,revise,fromdisconnect,todisconnect,delete,reserve,unreserve">Remove</logical>
+            <logical physical="read,show,checkout,modify,checkin,lock,unlock,revise,fromconnect,toconnect,fromdisconnect,todisconnect,delete,reserve,unreserve">Add Remove</logical>            
+        </logicalMappings>
+        <accessMasksInheritanceLimit></accessMasksInheritanceLimit>
+    </policy>
+    <policy>Project Space, Project Space Hold Cancel, Seasonal Plan, Project Concept, Project Template, Project Proposal,Assessment,Financial Items,Project Risk,Business Goal,Question,Baseline Log,Interval Item Data,Quality,Quality Metric,Resource Request,RPN,URL, Project Opportunity
+        <logicalMappings>
+            <logical physical="read,show,checkout,toconnect,todisconnect" inheritedLogicalNames="">Project Member</logical>
+            <logical physical="read,show,checkout,toconnect,todisconnect,modify,changetype,changename,changepolicy,checkin,fromconnect,fromdisconnect,lock,unlock,reserve,unreserve,delete,revise,majorrevise,promote,demote,changesov">Project Lead</logical>
+        </logicalMappings>
+        <accessMasksInheritanceLimit></accessMasksInheritanceLimit>
+    </policy>
+    <policy>VPLM_SMB_DesignWS
+            <logicalMappings>
+                <logical physical="read,show,checkout" inheritedLogicalNames="">Read</logical>
+                <logical physical="all">All</logical>
+            </logicalMappings>
+            <accessMasksInheritanceLimit></accessMasksInheritanceLimit>
+    </policy>
+    <policy>Requirement,Use Case,Requirement Group,Requirement Specification,Chapter,Comment
+        <logicalMappings>
+            <logical physical="read,show,checkout,toconnect,todisconnect">Reader</logical>
+            <logical physical="read,show,checkout,toconnect,todisconnect,modify,changetype,changename,checkin,fromconnect,fromdisconnect,lock,reserve,unreserve,revise,majorrevise,promote,demote">Author</logical>
+            <logical physical="read,show,checkout,toconnect,todisconnect,modify,changetype,changename,checkin,fromconnect,fromdisconnect,lock,unlock,reserve,unreserve,delete,revise,majorrevise,promote,demote,changesov">Leader</logical>
+        </logicalMappings>
+        <accessMasksInheritanceLimit></accessMasksInheritanceLimit>
+    </policy>
+    <policy>Project Task,Project Review,CDRL,SDRL,NonContractDRL
+        <logicalMappings>
+            <logical physical="read,show,checkout,toconnect,todisconnect" inheritedLogicalNames="">Project Member</logical>
+            <logical physical="read,show,checkout,toconnect,todisconnect,modify,changetype,changename,changepolicy,checkin,fromconnect,fromdisconnect,lock,reserve,unreserve,revise,majorrevise,promote,demote">Author</logical>
+            <logical physical="read,show,checkout,toconnect,todisconnect,modify,changetype,changename,changepolicy,checkin,fromconnect,fromdisconnect,lock,unlock,reserve,unreserve,delete,revise,majorrevise,promote,demote,changesov">Project Lead</logical>
+        </logicalMappings>
+        <accessMasksInheritanceLimit></accessMasksInheritanceLimit>
+    </policy>
+    <policy>Product Data Specification,Restricted Product Data Specification,Production Product Data,Experimental Product Data,Hypothetical-Private Product Data,Hypothetical-Public Product Data,Pilot Product Data,Production Formulation Part,Hypothetical-Private Formulation Part,Hypothetical-Public Formulation Part,Experimental Formulation Part,Pilot Formulation Part
+        <logicalMappings>
+            <logical physical="read,show,checkout" >Read</logical>
+            <logical physical="read,show,checkout,modify,checkin,lock,unlock,revise,fromconnect,toconnect,fromdisconnect,todisconnect,majorrevise">Read Write</logical>
+	    <logical physical="read,show,checkout,revise,fromconnect,fromdisconnect,toconnect,todisconnect,changeowner,delete,modify,changename,changesov">Subject Matter Expert</logical>
+            <logical physical="read,show,checkout,modify,checkin,lock,unlock,revise,fromconnect,toconnect,fromdisconnect,todisconnect,delete,promote,demote,changeowner,changesov,majorrevise">All</logical>
+        </logicalMappings>
+        <accessMasksInheritanceLimit></accessMasksInheritanceLimit>
+    </policy>
+    <policy>Hypothetical-Private Formulation,Hypothetical-Public Formulation,Experimental Formulation,Pilot Formulation,Production Formulation,Hypothetical-Private Formulation Process,Hypothetical-Public Formulation Process,Experimental Formulation Process,Pilot Formulation Process,Production Formulation Process
+        <logicalMappings>
+            <logical physical="read,show,checkout" inheritedLogicalNames="">Read</logical>
+            <logical physical="read,show,checkout,modify">Modify</logical>
+	     <logical physical="read,show,checkout,revise,fromconnect,fromdisconnect,toconnect,todisconnect,changeowner,delete,modify,changename,changesov" >Subject Matter Expert</logical>
+            <logical physical="read,show,checkout,modify,checkin,lock,unlock,revise,fromconnect,toconnect,fromdisconnect,todisconnect,delete,promote,demote,changeowner,changesov">All</logical>
+        </logicalMappings>
+        <accessMasksInheritanceLimit></accessMasksInheritanceLimit>
+    </policy>
+    <policy>Characteristic Master
+		<logicalMappings>
+			<logical physical="show,read,toconnect,todisconnect">Read</logical>
+			<logical physical="create,show,read,revise,toconnect,todisconnect,modify,fromconnect,fromdisconnect,promote,demote,majorrevise">Read Write</logical>
+		</logicalMappings>
+		<accessMasksInheritanceLimit></accessMasksInheritanceLimit>
+	</policy>
+    <policy>Development Part,EC Part,Configured Part,Manufacturer Equivalent,CAD Model, CAD Drawing, Drawing Print, Part Specification
+            <logicalMappings>
+                <logical physical="read,show,checkout" inheritedLogicalNames="">Read</logical>
+                <logical physical="read,show,fromconnect,toconnect,fromdisconnect,todisconnect,checkout">Read and Connect</logical>
+                <logical physical="read,show,modify,checkout,checkin,lock">Read Write</logical>
+                <logical physical="read,show,revise,modify">Revise</logical>
+            </logicalMappings>
+            <accessMasksInheritanceLimit></accessMasksInheritanceLimit>
+    </policy>
+    <policy>Controlled Documents,Controlled Document Template
+        <logicalMappings>
+            <logical physical="read,show,checkout" inheritedLogicalNames="">Read</logical>
+            <logical physical="read,show" inheritedLogicalNames="">Basic</logical>
+            <logical physical="read,show,checkout,fromconnect,fromdisconnect,toconnect,todisconnect,changeowner,changesov,delete,modify,changename,revise,lock,unlock,checkin" inheritedLogicalNames="">Can Edit</logical>
+			<logical physical="read,show,modify,checkout,checkin" inheritedLogicalNames="">Review</logical>
+        </logicalMappings>
+        <accessMasksInheritanceLimit></accessMasksInheritanceLimit>
+    </policy>
+    <policy>Deliverable Planning
+        <logicalMappings>
+            <logical physical="read,show,checkout,toconnect,todisconnect" inheritedLogicalNames="">Read</logical>
+        </logicalMappings>
+        <accessMasksInheritanceLimit></accessMasksInheritanceLimit>
+    </policy>
+    <policy>Part Quality Plan
+        <logicalMappings>
+            <logical physical="modify,checkout,promote,changeowner,changesov,demote,fromconnect,toconnect,fromdisconnect,todisconnect,changename,changetype" inheritedLogicalNames="">Coowner</logical>
+            <logical physical="read,show,checkout,modify,checkin,lock,unlock,revise,fromconnect,toconnect,reserve,unreserve">Add</logical>
+        </logicalMappings>
+        <accessMasksInheritanceLimit></accessMasksInheritanceLimit>
+    </policy>
+    <policy>Certification,Deliverable
+    <logicalMappings>
+        <logical physical="read,show,checkout" inheritedLogicalNames="">Read</logical>
+        <logical physical="read,checkout,checkin,promote,show" inheritedLogicalNames="">Supplier Access</logical>
+    </logicalMappings>
+    <accessMasksInheritanceLimit></accessMasksInheritanceLimit>
+    </policy>
+    <policy>RFQ Quotation
+        <logicalMappings>
+        <logical physical= "read,modify,checkout,checkin,changeowner,promote,demote,fromconnect,toconnect,fromdisconnect,todisconnect,grant,show" inheritedLogicalNames="">Supplier Access</logical>
+        </logicalMappings>
+    <accessMasksInheritanceLimit></accessMasksInheritanceLimit>
+    </policy>
+    <policy>Hazard Template
+        <logicalMappings>
+            <logical physical="read,show" inheritedLogicalNames="">Read</logical>
+            <logical physical="read,show,modify,promote,demote,fromconnect,fromdisconnect,changeowner">All</logical>
+        </logicalMappings>
+        <accessMasksInheritanceLimit></accessMasksInheritanceLimit>
+    </policy>
+	<policy>Market Authorization Change,Market Authorization
+        <logicalMappings>
+                <logical physical="read,show,checkout,fromconnect,fromdisconnect,execute,toconnect,todisconnect,changeowner,delete,modify,promote,demote,changename ">Lead</logical>
+              <logical physical="read,show">Member</logical>
+        </logicalMappings>
+        <accessMasksInheritanceLimit></accessMasksInheritanceLimit>
+    </policy>
+    <policy>Effort,Weekly Timesheet
+        <logicalMappings>
+            <logical physical="read,show,checkout,toconnect,todisconnect,modify,changetype,changename,checkin,fromconnect,fromdisconnect,lock,unlock,reserve,unreserve,delete,revise,majorrevise,promote,demote,changesov">Project Lead</logical>
+        </logicalMappings>
+        <accessMasksInheritanceLimit></accessMasksInheritanceLimit>
+    </policy>
+    <policy>DMR Package
+    <logicalMappings>
+        <logical physical="read,show,checkout" inheritedLogicalNames="">Read</logical>
+    </logicalMappings>
+    <accessMasksInheritanceLimit></accessMasksInheritanceLimit>
+    </policy>
+<policy>VPLM_SMB_Definition,VPLM_SMB_Definition_Document,VPLM_SMB_Evaluation,VPLM_SMB_Resource,VPLM_SMB_Management
+  <logicalMappings>
+    <logical physical="read,show,checkout,toconnect,todisconnect" inheritedLogicalNames="">Reader</logical>
+    <logical physical="read,show,checkout,toconnect,todisconnect,modify,changetype,checkin,fromconnect,fromdisconnect,lock,unlock,reserve,unreserve,revise,majorrevise" inheritedLogicalNames="">Author</logical>
+  </logicalMappings>
+  <accessMasksInheritanceLimit></accessMasksInheritanceLimit>
+</policy>
+<policy>Perpetual Resource,Model
+	<logicalMappings>          
+		 <logical physical="read,show" inheritedLogicalNames="">Basic</logical>
+		<logical physical="read,show,checkout" inheritedLogicalNames="">Read</logical>
+		<logical physical="read,show,checkout,modify,checkin,lock,unlock,revise,reserve,unreserve,changename">Read Write</logical>
+		<logical physical="read,show,checkout,modify,checkin,lock,unlock,revise,fromconnect,toconnect,reserve,unreserve,changetype,changename">Add</logical>
+		<logical physical="read,show,checkout,modify,checkin,lock,unlock,revise,fromdisconnect,todisconnect,delete,reserve,unreserve,changetype,changename">Remove</logical>
+		<logical physical="read,show,checkout,modify,checkin,lock,unlock,revise,fromconnect,toconnect,fromdisconnect,todisconnect,delete,reserve,unreserve,changetype,changename">Add Remove</logical>
+		<logical physical="read,show,checkout,modify,checkin,lock,unlock,revise,promote,demote,fromconnect,toconnect,fromdisconnect,todisconnect,delete,changeowner,changesov,reserve,unreserve,changetype,changename">Full</logical>
+	</logicalMappings>
+	<accessMasksInheritanceLimit></accessMasksInheritanceLimit>
+</policy>
+<policy>Product,Product Configuration,Configuration Option
+	<logicalMappings>          
+		 <logical physical="read,show" inheritedLogicalNames="">Basic</logical>
+		<logical physical="read,show,checkout" inheritedLogicalNames="">Read</logical>
+		<logical physical="read,show,checkout,modify,checkin,lock,unlock,revise,reserve,unreserve,changename">Read Write</logical>
+		<logical physical="read,show,checkout,modify,checkin,lock,unlock,revise,fromconnect,toconnect,reserve,unreserve,changename">Add</logical>
+		<logical physical="read,show,checkout,modify,checkin,lock,unlock,revise,fromdisconnect,todisconnect,delete,reserve,unreserve,changename">Remove</logical>
+		<logical physical="read,show,checkout,modify,checkin,lock,unlock,revise,fromconnect,toconnect,fromdisconnect,todisconnect,delete,reserve,unreserve,changename">Add Remove</logical>
+		<logical physical="read,show,checkout,modify,checkin,lock,unlock,revise,promote,demote,fromconnect,toconnect,fromdisconnect,todisconnect,delete,changeowner,changesov,reserve,unreserve,changename">Full</logical>
+	</logicalMappings>
+	<accessMasksInheritanceLimit></accessMasksInheritanceLimit>
+</policy>
+<policy>Change Request
+        <logicalMappings>
+           <logical physical="read,show,checkout,modify,fromconnect,toconnect,fromdisconnect,todisconnect">Can Add Remove</logical>
+        </logicalMappings>
+        <accessMasksInheritanceLimit></accessMasksInheritanceLimit>
+</policy>
+</domainAccess>

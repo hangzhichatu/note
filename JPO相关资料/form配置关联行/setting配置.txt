@@ -1,0 +1,35 @@
+  field# 1       select $<attribute[attribute_IMPHTCode]>
+    expressiontype businessobject
+    multiline    false
+    edit         false
+    name         IMPHTCode
+    label        emxFramework.Attribute.IMPHTCode
+    range        ${COMMON_DIR}/emxFullSearch.jsp?table=AEFGeneralSearchResults&showInitialResults=true&selection=single&field=TYPES=type_IMPHTDocument:CURRENT=RELEASED
+    setting      Admin Type value attribute_IMPHTCode
+    setting      Field Type value attribute
+    setting      Group Name value F8
+    setting      Input Type value textbox
+    setting      On Change Handler value reloadHTCodeField
+    setting      Registered Suite value Framework
+    setting      Required value true
+
+第一个修改会触发第二行联动，这个联动的方法是通过 setting "On Change Handler" 来实现的，它的值"reloadHTCodeField" 在common/script/emxUICore.js 有对应的方法
+
+注：错误。 emxUICore.js是所有注册中心的form关联js都会调用的js，所以写到核心UIcore里面所有注册中心就都可以使用了，
+正确找处理JSP是通过配置文件emxSystem.property这个系统配置文件，找  如：eServiceSuiteFramework.UIForm.ValidationFile = xxx/xxx.jsp 这类路径的的jsp文件
+
+
+  field# 2       select empty
+    expressiontype businessobject
+    multiline    false
+    edit         false
+    name         IMPPurchaseDepartment
+    label        emxFramework.Attribute.IMPPurchaseDepartment
+    setting      Field Type value attribute
+    setting      Input Type value combobox
+    setting      Registered Suite value Framework
+    setting      Reload Function value reloadUnitCombobox
+    setting      Reload Program value IMPYSGLJPO
+    setting      Required value true
+
+说明:第二行是一个下拉值框，下拉值范围由Reload Function指定的jpo方法获取，在选中后会刷新该方法，具体参考JPO

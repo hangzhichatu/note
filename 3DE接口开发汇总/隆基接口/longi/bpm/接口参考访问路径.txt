@@ -1,0 +1,2 @@
+https://3deuat.cslamc.com/3dspace/resources  + "自定义路径" //拓展extends ModelerBase 实现接口方式
+

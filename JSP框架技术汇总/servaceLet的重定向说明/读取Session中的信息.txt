@@ -1,0 +1,30 @@
+// 假设这是一个 servlet 的 doGet 方法
+protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    // 获取 dataId 参数
+    String dataId = request.getParameter("dataId");
+
+    if (dataId != null && !dataId.isEmpty()) {
+        // 从 session 中获取对应的数据
+        HttpSession session = request.getSession(false); // false 表示如果 session 不存在则返回 null
+        if (session != null) {
+            Object storedData = session.getAttribute(dataId);
+
+            if (storedData != null) {
+                // 处理你的数据...
+                // 可能需要将其转换为适当的类型
+                // 比如: MyDataType myData = (MyDataType) storedData;
+            } else {
+                // 如果没有找到对应的数据
+                // 进行错误处理...
+            }
+        } else {
+            // 如果 session 不存在
+            // 进行错误处理...
+        }
+    } else {
+        // 如果没有提供有效的 dataId
+        // 进行错误处理...
+    }
+
+    // 继续处理请求...
+}

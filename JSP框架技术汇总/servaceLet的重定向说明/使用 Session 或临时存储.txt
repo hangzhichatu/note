@@ -1,0 +1,7 @@
+// 假设我们使用 session 来存储 post 数据
+HttpSession session = request.getSession();
+String uniqueId = UUID.randomUUID().toString();
+session.setAttribute(uniqueId, postData); // postData 是你的 POST 数据
+
+// 然后进行重定向并附带 uniqueId
+response.sendRedirect("http://example.com/newPage?dataId=" + uniqueId);

@@ -1,0 +1,6 @@
+set对象是一个集合的对象，用于将对象添加到其中，有一些特有的属性
+set不是bus对象
+set是谁创建的，就只有谁能够查询到，其他人mql语句查询的话需要设置上下文为这个创建者的 "推荐使用 creator"
+
+如 print set AllDocumenet user creator select id dump;
+mod set user creator add bus id;

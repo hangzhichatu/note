@@ -1,0 +1,9 @@
+1.打开mql
+
+2. set context user creator;
+3. insert prog 这两个JPO所在路径/ImportNewCustoAttribute_mxJPO.java;
+4 compile prog ImportNewCustoAttribute force update;
+5. insert prog 这两个JPO所在路径/ImportUpdateCustoAttribute_mxJPO.java;
+6.compile prog ImportUpdateCustoAttribute force update;
+
+这几步替代原部署文档里面的4，5，6，7

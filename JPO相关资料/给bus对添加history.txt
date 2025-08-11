@@ -1,0 +1,2 @@
+mql语句
+mod bus id add history modify comment '你需要写入的内容' ；

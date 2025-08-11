@@ -1,0 +1,35 @@
+这是最常见的方式，通过在项目的 web.xml 配置文件中添加 <session-config> 元素，并在其中指定 <session-timeout> 的值。这个值是以分钟为单位的。
+
+xml
+
+<session-config>
+    <session-timeout>30</session-timeout> <!-- 设置超时时间为30分钟 -->
+</session-config>
+
+这种方式适用于整个应用程序，默认情况下所有的会话都会遵循这个设置。如果某个特定的 session 需要不同的超时时间，可以使用下面的方法覆盖这个全局设置。
+
+HttpSession session = request.getSession();
+session.setMaxInactiveInterval(60 * 30); // 设置超时时间为30分钟，以秒为单位
+
+3. 在应用服务器的配置文件中设置（如 Tomcat）
+
+如果你希望对所有部署在这个服务器上的 web 应用程序都应用相同的 session 超时时间，可以直接修改应用服务器的配置文件。对于 Tomcat 来说，可以在 $TOMCAT_HOME/conf/web.xml 文件中找到默认的 session 配置，并进行相应的修改。
+
+xml
+深色版本
+
+<session-config>
+    <session-timeout>30</session-timeout> <!-- 默认的超时时间 -->
+</session-config>
+
+优先级
+
+需要注意的是，上述三种方式存在一个优先级顺序：
+
+    Servlet 中 API 设置（即在代码中使用 setMaxInactiveInterval()）的优先级最高。
+    工程级别的 web.xml 设置次之。
+    最后是容器级别（比如 Tomcat 的 conf/web.xml）的设置最低15
+    。
+
+此外，当客户端与服务器交互时，如果在这个 session 的最大不活动间隔时间内有新的请求发生，那么 session 的超时计时器将会重置4
+。这意味着只要用户持续活动，session 就不会因为超时而被销毁。只有当用户的不活动时间超过了设定的最大不活动间隔时间时，session 才会被视为过期并自动销毁。

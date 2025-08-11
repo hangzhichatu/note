@@ -1,0 +1,6 @@
+执行mql语句：
+
+set context user creator;
+validate searchindex;
+执行该语句后/dsplm/R2022x/3DSpace/logs/sxi路径下面会生成索引诊断文件如:validate_1702462993694.zip 
+解压后mql执行里面的修复文件即可

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="longi.mybatis.mapper.ModelUserAccessMapper">
+
+    <select id="getAllCounts" resultType="int">
+        select count(USER_NAME)
+        from PLM_SHARING_USER_3A_ACCESS
+    </select>
+
+    <select id="showAll"  resultType="longi.mybatis.bean.ModelUserAccess">
+        select MODEL_NAME
+        from PLM_SHARING_USER_3A_ACCESS where USER_NAME = #{USER_NAME}
+    </select>
+
+    <insert id="addMeeting">
+        insert into PLM_SHARING_USER_3A_ACCESS(USER_NAME,MODEL_NAME,IS_ACTIVE,CREATE_DATA) values(#{USER_NAME},#{MODEL_NAME},#{IS_ACTIVE},#{CREATE_DATA})
+    </insert>
+
+</mapper>

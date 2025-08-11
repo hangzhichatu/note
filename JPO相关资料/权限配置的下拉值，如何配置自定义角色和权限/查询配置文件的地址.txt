@@ -1,0 +1,11 @@
+print page DomainAccess ; 查看历史记录中导入文件的指令所在的地址
+比如这样的：
+导出page的语句
+print page "DomainAccess"  output "C:/Users/Administrator/Desktop/deploy history/2021-12-2/Schema/Business/PageFiles/DomainAccess"
+
+mod page "DomainAccess" file "C:/Users/Administrator/Desktop/deploy history/2021-12-2/Schema/Business/PageFiles/DomainAccess"
+配置文件的就在这个路径下面
+
+如果部署是通过重定位到共享文件夹方式部署的，可能路径不存在，这里给一个参考的OOTB的路径
+
+/R2022x/3DSpace/Apps/BusinessProcessServices/V6R2022x/modules/ENOFramwork/AppInstall/Pages/

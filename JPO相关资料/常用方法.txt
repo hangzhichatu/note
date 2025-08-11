@@ -1,0 +1,233 @@
+import com.matrixone.apps.domain.DomainObject;
+
+DomainObject Dombus
+设置对象的属性值名称
+Dombus.setAttributeValue(context,"属性名，非注册名"，值)
+声明一个对象、
+DomainObject dd=new DomainObject(id);
+
+
+获取人员的ID需要引用包 com.matrixone.apps.domain.util.PersonUtil;
+personId = PersonUtil.getPersonObjectID(context,selectedItem)，
+personId = PersonUtil.getPersonObjectId(context)(这个是获取context对象的Id)
+获取全名的两种方式
+String strUser=context.getUser();//获取name？
+FullName = PersonUtil.getFullName(context,strUser);//获取全名
+
+MqlUtil.mqlCommand(context,"print person "+ 对象Id + " fullname dump");
+
+import com.matrixone.apps.domain.DomainRelationship;
+新建关系型对象
+DomainRelationship rel = DomainRelationship.newInstance(context,id);
+
+获取国际化翻译的方法
+
+import static com.matrixone.apps.domain.util.EnoviaResourceBundle.getRangeI18NString;
+
+getTypeI18NString(context，TypeString,"zh_CN")
+类型名翻译
+getRangeI18NString(Context context, String attrString, String rangeString,"zh_CN") 
+中间两个分别是属性名和Rang值名
+getStateI18NString(String policyString, String stateString,,"zh_CN") 
+生命周期翻译
+######权限管控的MQL语句
+在指定Bus对象给指定用户增加特定的操作权限
+
+mod bus bus对象Id add ownership - 用户的名字末尾加"_PRJ" as Read,Modify,Delete,...(其他权限)
+mod bus bus对象Id add ownership - 用户的名字末尾加"_PRJ" for 'Mutiple Ownership For Object'  (所有者权限）
+
+修改bus对象的生命周期
+import matrix.db.BusinessObject
+
+domianobject.setPolicy(context,"生命周期名字");
+
+MQL修改bus对象生命周期语句
+mod busId policy "policy名字"；
+
+//通过非mql方法获取对象当前生命周期的语句
+
+DomainObject newjec = DomainObject.newInstance(context,id);
+State sstate = newjec.getCurrentState(context);
+String state = sstate.getName();
+String ChineseState = getStateI18NString(policy名称,sstate,"zh_CN")
+
+//获取继承Task类型的所有类型的名字
+import com.matrixone.apps.program.ProgramCentralUtil;
+
+StringList slTaskSubTypes = ProgramCentralUtil.getTaskSubTypesList(context);
+
+
+//读取配置文件翻译的方法
+引用包：
+import com.matrixone.apps.util.EnoviaResourceBundle;
+import matrix.db.JPO;
+
+参考用例
+String strLanguage = context.getSession().getLanguage();//也可以直接赋值成“zh_CN”
+String fanyi = EnoviaResourceBundle.getProperty(context,"emxLibraryCentralStringResource", new Locale(strLanguage),"emxLibraryCentral.common.Classification");
+
+//如何自定义配置文件？
+需要emxZidingyi.properties(前提，没有该配置文件没办法读取的zh的配置文件的)
+以及emxZidingyi_zh_CN.properties(在此处进行配置)
+
+
+赋予所有权的操作代码
+//获取某个角色权限的掩码的值
+String physicalMasks = DomainAccess.getPhysicalAccessMasks(context,objectId,access); objectId是具体bus对象的Id, access 推测可能是角色role的名字比如（"Project Member","Project Lead"）
+
+physicalMasks的一个参考值为 "read,show,checkout,toconnect,todisconnect" 逗号隔开不同权限。
+创建一个Ownership的方法
+DomainAccess.createObjectOwnership(context,objectId,org,project,access,comment,true);objectId的值是bus对象的id，org,组织可为空，project创建权限的 用户名_PRJ，access，可以是角色名，也可以是角色掩码的值（参考上一个获取掩码值的代码），comment (给一个参考值"Multiple Ownership For Object")；
+
+
+文件签出到指定路径的方法引用包 matrix.db.BusinessObject
+
+
+
+targetDom.checkoutFile(context,false,sFormat,sTName,templatePath);
+参数说明，sFormat ,来源源于文件类型，查询语句如下 "print bus id select format.file.format dump |" 如果文档对象下关联了多个文件的话，会使用|将多个文件的sFrmat隔开
+
+sTName，文件全名（带后缀）
+templatePath,输出路径（服务器）
+targetDom 文档下具体文件的实例化对象
+
+指定路径下文件上传到指定文档的方法
+
+dom.checkinFile(context,true,ture,null,"",sTName,templatePath);
+sTName文件全名
+templatePath,文件所在路径
+
+
+签出文档到指定路径前的校验该路径是否存在,如果不存在则创建该路径
+File file =new File(templatePath);
+if(!file.exists()){
+	file.mkdir();
+}
+
+String 绝对路径 类名.class.getResource("/").getPath();"/"参数的作用是在获取决对路径 
+
+
+判断账号是否具有某种角色的setting表达式
+
+setting Access Expression value (context.user.isassigned[$<role_CMCSShipOwner>]==true) //角色名称是CMCCSShipeOwner
+这个setting的含义是具有CMCSShipeOwner的账户才能使用
+
+
+文档签入
+object.checkinFile(context,false,true,null,"generic",fileName,文件所在父文件夹路径)
+object是policy为Version的Document对象
+如何获取文件夹的父目录？
+ java.io.File pdfFile = new java.io.File(filePath);//filePath是文件的完整路径，这里是实例化文件
+ String fatherPath = pdfFile.getParent();
+
+
+文档签出
+object.checkoutFile(context,false,"generic",file.getName(),"签出路径父文件夹");
+
+
+获取Document对象（Document Relese生命周期）下所有关联的文件对象
+import matrix.db.FileList;
+FileList genericFiles = obj.getFiles(context,"generic");
+
+遍历对前面获取的genericFiles 进行操作的指令
+for(matrix.db.File file : genericFiles){
+	String fileName = file.getName();
+	
+}
+
+
+获取当前上下文角色对bus对象是否有xx权限
+引用包
+import com.matrixone.apps.domain.util.FrameworkUtil;
+	boolean flag = FrameworkUtil.hasAccess(context, new BusinessObject(objectId), "promote")//参数说明，context，需要判断是否有权限的上下文，参数2，实例化的bus对象，参数三，权限名称
+
+
+
+#获取非重复的bus对象的名称（可以用于创建获取的对象的编号名称名称）
+
+String sDocName = new DomainObject.getUniqueName("Name-Pre",10);//参数说明"Name-Pre"前缀，10，编码数字的长度
+
+
+#创建一个bus对象的方法
+DomainObject doc = DomainObject.newInstance(context);
+
+doc.createObject(context,"Document",sDocName,"0","Document Release","eService Production");
+
+#克隆一个bus对象的方法
+
+DomainObject Templateobj = DomainObject.newInstance(context,原对象Id);
+BusinessObject copyBus = Templateobj.cloneObject(context,name,revision,"eService Production",true,true);//克隆一个bus对象
+copyBus.getObjectId();//获取克隆对象的Id
+
+
+创建一个CA对象的方法
+
+import com.dassault_system.enovia.changeaction.factory.ChangeActionFactory;
+import com.dassault_system.enovia.changeaction.interfaces.IChangeAction;
+import com.dassault_system.enovia.changeaction.interfaces.IChangeActionServices;
+import com.dassault_system.enovia.enterprisechangemgt.common.ChangeAction;(或者末尾直接*也行)
+
+IchangeActionService iCaService = ChangeActionFactory.CreateChangeActionFactory();
+String newCAId =iCaServices.CreateChangeAction(context,"Change Action",null,null).getCaBusinessObject().getObjectId(context);
+ChangeAction changeAction = new ChangeAction(newCAId);
+changeAction.setAttributeValue(context,"属性名",属性值);
+查询CA关联的受影响的项目的方法
+MapList mList = new ChangeAction(CaId).getAffectedItems(context);//获取受影响的项
+MapList realizedMList =new ChangeAction(CaId).getRealizedChanges(context);//获取已经实现的更改
+
+
+读取系统的配置文件的方法
+com.matrixone.apps.domain.DomainObject;
+——
+i18nNow.getI18nString("配置文档中的关键字"，"配置文档。比如emxFramworkStringResource","zh_cn").zh_cn是取汉化目录的意思
+
+java自带的读取配置文件的方法
+
+import java.util.Properties;
+import java.io.FileReader;
+import java.ioBufferedReader;//这是一个读取文件流的包
+
+String path = "文件路径"；
+BUfferedReader bufferedReader = new BuffereadReader(new FileReader(配置文档路径));
+Properties readp = new Properties();
+readp.load(bufferedReader);
+//读取关键字
+readp.getProperty("关键字")；这个方法会返回一个String类型的，如果没有找到则会放回null;
+
+//获取人员被指派的角色，并且校验
+String role=MqlUtil.mqlCommand(context, "print person '"+user+"' select assignment dump");
+			if(role.contains("IMP_PZY")){
+				flag=true;
+			}
+
+升版
+DomianObject obt；
+obt.revise(context,"版本","库")；
+获取bus对象的下一个版本的版本号的方法
+obt.getNextRevision(context);
+获取库的方法
+obt.getVault(context);
+获取下一个版本的方法
+getNextRevision(Context context) 
+获取最后一个版本
+getLastRevision(Context context) 
+
+//文档签入更详细的说明
+
+如果你有一个Document的对象，你希望将一个文件添加其下那么从需要将该对象实例化成 CommonDocument 类型的对象
+CommonDocument DocObj = new CommonDocument(DocumentId);
+DocObj.checkinFile(context,false,true,null,"generic","xxx.xlsx","/home/plmamd/temp/"); 这一步只是把文件给插入到Document对象里面，如果要让它在文件里面可以见还得创建版本
+DocObj.createVersion(context，"xxx.xlsx","xxx.xlsx",null);//操作完这一步，才能在具体的文件里面看到
+
+
+
+设置上下文为指定名称的角色
+ContextUtil.pushContext(context,"用户名","","");
+
+//设置后台事务的方法BackgroundProcess类型
+import com.matrixone.apps.domain.util.BackgroundProcess;
+
+BackgroundProcess backgroundProcess = new BackgroundProcess();
+backgroundProcess.submitJob(context,"JPO名称"，"方法名称"，args参数 String[] 型，null);//最后一个参数
+作用未知
+

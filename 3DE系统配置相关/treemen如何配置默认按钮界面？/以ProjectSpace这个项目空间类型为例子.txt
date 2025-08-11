@@ -1,0 +1,2 @@
+mod menu  type_ProjectSpace add setting 'Default Category'  PMCSchedule
+Default Category 是一个配置的setting 

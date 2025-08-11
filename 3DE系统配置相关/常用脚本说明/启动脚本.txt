@@ -1,0 +1,6 @@
+/dsplm/DassaultSystemes/scripts/ 该路径下面通常会有手动配置的start.sh全启动脚本
+
+在各个App下面bin文件夹比如路径：
+/dsplm/DassaultSystemes/tomees/tomee-3dcomment/bin/
+
+也会有Startup.bat 或Startup.sh与shutdown.bat和shutdown.sh启动/关闭服务脚本

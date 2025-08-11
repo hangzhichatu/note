@@ -1,0 +1,2 @@
+emxCreate.jsp?xxxxx（正常创建链接）
+后加参数&submitAction=treePopup

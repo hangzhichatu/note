@@ -1,0 +1,5 @@
+创建的按钮连接中emxCreateform.jsp
+nameField 设置
+当nameField=autoname时候 自动命名
+当nameField=keyin时候 手写
+当nameField=both时候，子啊name左侧回有个自动命名的小框框可以勾选

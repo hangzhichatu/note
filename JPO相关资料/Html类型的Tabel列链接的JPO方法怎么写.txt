@@ -1,0 +1,14 @@
+import 
+
+String baseURL = EnoviaResourceBundle.getProperty(context,"COUNTEXT_URL_1");//获取当前cas的基础链接
+String url = MailUtil.getObjectLinkURI(context,baseUrl, 对象ID)；//返回访问该对象的完整URL
+StringBuffer strBuf = new StringBuffer();
+strBuf.append("<a href = \"javascript:emxTableColumnLinkClick('"+url+"')\">"+显示名称+"</a>");
+return strBuf.toString;
+
+
+另外一种带图标的html 类型返回值写法
+"<img src = \"图片链接 \"/>&#160;<a href = \"JavaScript:emxTableColumnLinkClick('emxTree.jsp?name="+XSSUtil.encodeForHTMLAttribute(context,strLastName)+"&amp;treeMenu=type_Person)>
+
+
+

@@ -1,0 +1,17 @@
+查询table是否有自定义的字table
+
+print table xxxtable system  select  derivative；
+
+返回
+    derivative = 用户1，用户1自定义名称~xxxtable
+    derivative = 用户2，用户2自定义名称~xxxtable
+
+查询自定义的table语句
+
+print table 用户1自定义名称 user 用户1；
+
+代码执行用户创建自定义视图
+copy table 原始table名称   自定义table名称  derived；
+
+如何修改某一自定义视图是被选择的？
+mod table table名称 property MX_CURRENT_TABLE value true;

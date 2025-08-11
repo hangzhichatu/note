@@ -1,0 +1,20 @@
+JSP获取Table界面勾选对象的Id
+String[] emxTableRowIds = request.getParameterValues("emxTableRowId");
+
+另外一种
+String[] Projects =emxGetParameterValues(request,"emxTableId");
+String[] strObjectIDArr = new String[projects.length];
+	for(int i=0;i<projects.length;i++){
+		String sTempObj = projects[i];
+		Map mParsedObject = ProgramCentralUtil.parseTableRowId(context,sTempObj);
+		String sObjId = (String)mParsedObject.get("objectId");
+		strObjectIDArr[i] = sObjId;
+	
+	}
+
+JSP重定位的方法（验证过不会出现bug，不会出现弹出窗口无法关闭的情况）
+
+getTopWindow().showModalDialog(URL);
+
+将拼成的链接编码成能够跳转的链接，避免因为特殊字符无法跳转的情况
+String encodeRedirectToURL =URLEncoder.encode("待处理URL","UTF-8");//注：UTF-8可以更换成其他需要的编码格式

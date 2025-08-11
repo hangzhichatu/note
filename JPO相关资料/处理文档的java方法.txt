@@ -1,0 +1,78 @@
+aspose包，处理文档
+
+com.aspose.words.Document (word)
+com.aspose.words.PdfSaveOptions; (word保留为PDF时候需要引用的包)
+
+在word中插入自定义属性
+1。点击 文件→属性→高级属性→自定义 可以定义属性和属性节点
+2.在word中插入自定义文档 鼠标移动到光标位置 Ctrl+F9 ，这时候会在光标位置插入一个 {  }所圈起来的表达式，在其中输入
+{ DOCPROPERTY 属性名 }，即可吧属性插入其中，“点击表达式按F9，可以将表达式刷新为定义属性时候设置的值”
+
+JAVA代码部分
+
+一，使用aspose包需要验证license
+这里提供一个验证license的方法（只要调用了这个方法就行）
+
+private static boolean getLicense(){
+	boolean resuly = false;
+	try{
+		String path = Theard.currentThread().getContextClassLoader().getReasource().getPath();//总之获取license文件所在的路径
+		InputStream is = new FileInputStream(new File(路径))；
+		License aposeLic = new License();
+		aposeLic.setLicense(is);
+		result = true;
+	}catch (Exception e){
+		e.printStackTrace();
+	}
+	return result;
+
+}
+
+
+二，读取并且设置自定义属性，并且刷新word中自定义属性的方法
+//读文档
+Document doc = new Document(文档路径)；
+//获取文档所有属性
+com.aspose.words.CustomDocumentProperties propertise = doc.getCustomDocumentProperties();
+
+//设定自定义属性
+properties.get("属性名称，汉族有unicode码替代").setValue("新输入值");
+
+//将word文档保存为PDF的设置
+PdfSaveOptions options = new PdfSaveOptions();
+options.setFontEmbeddingMode(1); //参数说明0,为默认模式，1为兼容模式，推荐1，因为不同操作系统上由于字体不全的原因，直接转pdf可能会导致文档中汉字缺失
+
+//
+doc.updateFields();//更新文档，刷新域
+doc.save(outputPath,options);//保存 （说明：outputPath需要见输出路径写完全，包括文档名称和文档的后缀，转存为pdf的话，将路径文档后缀转换成pdf就行，options是前面定义的PDF设置）
+
+
+
+关于字体的说明:windows系统一般汉字字体是全的，linux字体可能不全，可通过一下语句查询
+//查询汉字字体
+fc-list :lang=zh
+//在线安装字体执行
+
+Ubuntu 和 Debian系统:
+sudo apt-get install fonts-wqy-zenhei
+
+Fedora 和 Debian 系统
+sudo yum install wqy-zenhei-fonts
+
+//更新系统字体缓存
+sudo fc-cache -f -v
+
+//在word文档中插入文件的方法
+import com.aspose.words.DocumentBuilder;
+import com.aspose.words.License;
+import com.aspose.words.Document;
+
+com.aspose.words.Document templateDoc = new com.aspose.words.Document(WordPath+"/"+WordName);
+DocumentBuilder builder = new DocumentBuilder(templateDoc);//builder对象可以操作word里面的各种对象
+
+builder.moverToMergerFiled("标记"，false,true) 这个方法会将builder给移动到指定名称的合并列，并且移动成功会返回一个
+布尔值变量
+
+builder.insertImage("图片路径",72,36);//72，36是插入图片的尺寸，像素
+
+

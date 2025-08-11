@@ -1,0 +1,5 @@
+jsp页面执行操作的时候，有时候触发的对象的tirgger的提示信息不会第一时间打印，需要刷新页面
+后才会打印出来
+针对pop出的jsp，需要执行手动刷新的操作 操作的前端script语句如下
+
+window.opener.location.href = window.opener.location.href

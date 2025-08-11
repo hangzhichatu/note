@@ -1,0 +1,4 @@
+//条件筛选组合条件
+temp query bus Person * * where "attribute[Last Name]+attribute[First Name] =='王瑛'" select name dump 
+//筛选最新版本的文档
+temp query bus * 名称 * where "islast==true" select id;

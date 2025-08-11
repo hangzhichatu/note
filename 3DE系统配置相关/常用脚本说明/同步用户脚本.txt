@@ -1,0 +1,3 @@
+/dsplm/R2022x/3DSpace/scripts目录有个OnPremisesSynchroUser.sh 后面跟参数-login admin_platform -pwd Aa123456
+
+使用该脚本能够批量同步用户

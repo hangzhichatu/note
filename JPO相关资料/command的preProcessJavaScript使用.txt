@@ -1,0 +1,5 @@
+preProcessJavaScript=jsFunction
+在Command的链接中配置该设置，会在页面加载完成的时候调用jsFunction的js方法，该方法
+可以修改前端页面的元素样式和属性。
+
+1.该js方法该部署到哪个js文件中呢？ F12 产看页面源代码，在当前按钮的页面中引用的js文件均可以作为放置该方法的位置
