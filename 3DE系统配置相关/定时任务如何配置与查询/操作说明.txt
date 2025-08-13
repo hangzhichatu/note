@@ -68,3 +68,10 @@
 总结
 
 在 Windows 中，您可以使用任务计划程序创建和管理定时任务；而在 Linux 中，您可以通过编辑 crontab 文件来设置定时任务。选择合适的方法来配置定时任务可以帮助您自动化日常操作，提高工作效率。
+
+
+crontab的脚本可以这样写
+
+refreshAttribute.sh
+#内容如下
+    /usr/Dassaultmes/R2022x/3DSpace/script/mql -t -c "mql语句"

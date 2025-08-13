@@ -1,0 +1,15 @@
+# 3DE系统同步用户脚本说明
+
+## 用途
+用于批量同步3DE系统用户。
+
+## 使用方法
+在 /dsplm/R2022x/3DSpace/scripts 目录下执行：
+OnPremisesSynchroUser.sh -login admin_platform -pwd Aa123456
+
+## 参数说明
+-login：平台管理员账号
+-pwd：平台管理员密码
+
+## 注意事项
+请确保脚本有执行权限，且参数正确。
