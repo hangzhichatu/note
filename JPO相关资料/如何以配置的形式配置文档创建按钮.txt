@@ -1,0 +1,12 @@
+
+ootb原生的创建的文档功能大部分是 调用JSP：emxProgramCentralDocumentCreatePreProcess来实现的，根据链接里面里面拼接的参数可以进入到不同的业务场景
+此处按下不表，只介绍普通的文档创建，并且与父级建立指定关系要如何配置
+
+链接
+../components/emxCommonDocumentPreCheckin.jsp?objectAction=create&appDir=programcentral&appProcessPage=emxProgramCentralFolderUtil.jsp&actionMode=createDocument&parentRelName=relationship_LAMC_TaskToChangeImplement&fileRequired=false&refresh=true"
+
+部分重要配置项说明：
+    parentRelName 和父级节点建立的关系的注册名称  
+    fileRequired  创建文档时，是否必须要上传文件
+
+其次 使用该链接的按钮的setting Submit的值必须要为 true 否则后续无法获取父级节点的id

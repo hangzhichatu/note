@@ -1,0 +1,7 @@
+1上传按钮 PMCContentUploadFiles 
+作用，跳过创建文档的前置页面，直接到上传文件页面，选择完要上传的文件后（还可以编辑文档标题），点击确认可以在
+上下文的父级对象下创建一个文档
+
+2.配置的说明，该按钮如果在其展示的页面中 如经典的table页面中，其作为toolbar成员被添加到页面上，如果table的链接中
+有配置这个 parentRelName=relationship_LAMC_TaskToChangeImplement 的话，那么 PMCContentUploadFiles上传的文档与
+父级节点建立的关系类型就是LAMC_TaskToChangeImplement
