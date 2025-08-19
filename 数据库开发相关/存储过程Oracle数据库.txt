@@ -1,0 +1,170 @@
+Oracel数据库的存储过程比Mysql数据的存储过程要强大的多
+
+创建语句
+
+CREATE OR REPLACE PROCEDURE enroll_student (
+    p_student_id IN VARCHAR2,
+    p_name       IN VARCHAR2,
+    p_age        IN NUMBER
+) AS
+    -- 声明局部变量
+    v_count NUMBER := 0;
+BEGIN
+    -- 1. 检查学生是否已存在
+    SELECT COUNT(*) INTO v_count 
+    FROM students 
+    WHERE id = p_student_id;
+
+    -- 2. 如果不存在，则插入
+    IF v_count = 0 THEN
+        INSERT INTO students (id, name, age) 
+        VALUES (p_student_id, p_name, p_age);
+
+        -- 3. 写入日志
+        INSERT INTO logs (action, info) 
+        VALUES ('ENROLL', '学生 ' || p_name || ' 入学注册');
+
+        -- 输出提示信息（可选，用于调试）
+        DBMS_OUTPUT.PUT_LINE('学生 ' || p_name || ' 注册成功！');
+
+        -- 提交事务
+        COMMIT;
+    ELSE
+        -- 学生已存在，抛出异常
+        RAISE_APPLICATION_ERROR(-20001, '错误：学生ID ' || p_student_id || ' 已存在！');
+    END IF;
+
+EXCEPTION
+    -- 异常处理块
+    WHEN OTHERS THEN
+        -- 回滚事务
+        ROLLBACK;
+        -- 重新抛出异常（带错误信息）
+        RAISE_APPLICATION_ERROR(-20002, '注册失败：' || SQLERRM);
+END enroll_student;
+/
+
+
+使用以上存储过程
+EXEC enroll_student('S001', '张三', 20);
+或者
+BEGIN
+    enroll_student(p_student_id => 'S002', p_name => '李四', p_age => 19);
+END;
+/
+
+
+调试相关： 打开执行的输出 SET SERVEROUTPUT ON;
+
+
+
+进阶 ： 游标，异常处理，包 
+概念说明：包：模块化组织代码，提示可维护性
+        游标：逐行处理查询结果
+        异常处理：异常处理而并系统默认的异常处理
+
+第一步 ，创建包：包分为两部分，包体和包声明
+
+包声明部分：
+
+    CREATE OR REPLACE PACKAGE student_pkg AS
+    -- 公共常量
+    SUCCESS CONSTANT VARCHAR2(10) := 'SUCCESS';
+    FAILURE CONSTANT VARCHAR2(10) := 'FAILURE';
+
+    -- 公共过程声明
+    PROCEDURE process_all_students;
+    PROCEDURE log_message(p_type IN VARCHAR2, p_msg IN VARCHAR2);
+
+    -- 公共函数声明
+    FUNCTION calculate_gpa(p_student_id IN VARCHAR2) RETURN NUMBER;
+
+END student_pkg;
+/
+
+
+
+包体（实现逻辑）
+    CREATE OR REPLACE PACKAGE BODY student_pkg AS
+
+    -- 私有游标：只在包内使用，查找未处理的学生
+    CURSOR c_pending_students IS
+        SELECT DISTINCT s.id, s.name
+        FROM students s
+        JOIN scores sc ON s.id = sc.student_id
+        WHERE s.status = 'ACTIVE';
+
+    -- 私有变量（仅包内可见）
+    v_total_processed NUMBER := 0;
+
+    -- ========== 公共函数实现：计算 GPA ==========
+    FUNCTION calculate_gpa(p_student_id IN VARCHAR2) RETURN NUMBER IS
+        v_avg_score NUMBER;
+        v_gpa       NUMBER;
+    BEGIN
+        SELECT AVG(score) INTO v_avg_score
+        FROM scores
+        WHERE student_id = p_student_id;
+
+        -- 简单 GPA 规则：平均分 / 20
+        v_gpa := ROUND(v_avg_score / 20, 2);
+        RETURN NVL(v_gpa, 0);
+
+    EXCEPTION
+        WHEN NO_DATA_FOUND THEN
+            RETURN 0;
+        WHEN OTHERS THEN
+            RAISE_APPLICATION_ERROR(-20101, 'GPA计算出错: ' || SQLERRM);
+    END calculate_gpa;
+
+    -- ========== 公共过程实现：记录日志 ==========
+    PROCEDURE log_message(p_type IN VARCHAR2, p_msg IN VARCHAR2) IS
+    BEGIN
+        INSERT INTO process_logs (log_type, message)
+        VALUES (p_type, p_msg);
+        COMMIT; -- 日志独立提交（可考虑自治事务）
+    END log_message;
+
+    -- ========== 公共过程实现：处理所有学生 ==========
+    PROCEDURE process_all_students IS
+        v_gpa   NUMBER;
+        v_error_msg VARCHAR2(4000);
+    BEGIN
+        v_total_processed := 0;
+
+        -- 使用游标遍历每个学生
+        FOR r_student IN c_pending_students LOOP
+            BEGIN
+                -- 计算 GPA
+                v_gpa := calculate_gpa(r_student.id);
+
+                -- 更新学生 GPA
+                UPDATE students
+                SET gpa = v_gpa
+                WHERE id = r_student.id;
+
+                v_total_processed := v_total_processed + 1;
+
+                -- 记录成功日志
+                log_message('INFO', '学生 ' || r_student.name || ' GPA 更新为 ' || v_gpa);
+
+            EXCEPTION
+                -- 捕获单个学生处理错误，不影响整体
+                WHEN OTHERS THEN
+                    v_error_msg := SQLERRM;
+                    log_message('ERROR', '处理学生 ' || r_student.name || ' 失败: ' || v_error_msg);
+                    -- 继续处理下一个学生（不中断）
+            END;
+        END LOOP;
+
+        -- 最终日志
+        log_message('INFO', '批量处理完成，共处理 ' || v_total_processed || ' 名学生');
+
+    EXCEPTION
+        WHEN OTHERS THEN
+            log_message('ERROR', '批处理系统级错误: ' || SQLERRM);
+            RAISE; -- 系统级错误重新抛出
+    END process_all_students;
+
+END student_pkg;
+/
