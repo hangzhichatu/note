@@ -1,0 +1,51 @@
+情景，ootb的默认返回值是 表面展示值为 对象的name ，后台存储值为对象的id  对应的标签分别的   form行 name 与form行 name+OID 或者form行
+name + display 与form行name+OID
+
+如果需要将前端展示的值修改成我们想要的格式，或者别的该对象的属性，我们需要通过 submitURL 来实现
+
+如果  原始链接  ${COMMON_DIR}/emxFullSearch.jsp?field=TYPES=xxx&table=xxx&submitURL=../common/LAMC_SearchUtil.jsp
+
+其中LAMC_SearchUtil.jsp 就是进行值变换的处理jsp
+
+该jsp需要引用
+
+<%@ page import="com.matrixone.apps.framework.ui.UIUtil" %>
+<%@ include file = "emxNavigatorInclude.inc"%>
+
+首先可以从emxFullSearch中获取用户选择的对象的id和name等值以及form的目标标签
+<%
+String fieldNameActual = emxGetparameter(request,"fieldNameActual");//标签名称
+String fieldNameDisplay = emxGetparameter(request,"fieldNameDisplay");//展示值
+String displayExpression = emxGetparameter(request,"displayExpression");//表达式
+String emxTableRowId = emxGetParameterValues(request,"emxTableRowId");//id
+String rowId = "";
+String OIDValue = "";
+String displayValue = "";
+try{
+    if(emxTableRowId.length !=0){
+        for(int i=0;i<emxTableRowId.length;i++){
+            rowId = emxTableRowId[i];
+            String[] rowArray = rowId.split("\\|");
+            String objId = rowArray[1];//注意下标1的位置才是选择对象的id
+            displayValue = "通过各种处理获取的值";
+        }
+    }
+
+}catch(Exception e){
+    e.printStackTrace();
+}
+
+%>
+//接下来这部分是修改form表单里面对应行的值
+<script src="scripts/emxUICore.js" type="text/javascript"></script>
+<script language="javascript" type="text/javascript">
+
+
+var _form = getTopWindow.getWindowOpener.document.forms[0];
+
+_form["<%=fieldNameActual%>"].value = "<%=displayValue%>";
+_form["<%=fieldNameDisplay%>"].value = "<%=displayValue%>";
+_form["<%=fieldNameActual+"OID"%>"].value = "<%=OIDValue%>";
+getTopWindow().closeWindow();
+
+</script>
