@@ -1,0 +1,47 @@
+存储过程是一组预先编写好、存储在数据库中的 SQL 语句集合，可以像“函数”一样被调用执行。
+
+假设你是一家学校的教务系统管理员，每次有新学生入学，你都要做 3 件事：
+
+把学生信息插入 students 表
+给他默认选修“大学英语”这门课（插入 scores 表）
+记录一条操作日志（插入 logs 表）
+如果每次都手动写 3 条 SQL，不仅麻烦，还容易出错。
+
+如果你有可以一步完成的这三个操作的存储过程 可以使用以下语句一步完成
+CALL enroll_student('S005', '赵六', 'M', '计算机学院');
+
+存储过程的优点 ： 封装多条sql语句、速度比逐条执行的sql语句更快（因为它是预编译的），减少网络开销可以将JDBC部分异步处理的代码放到数据库这端来实现，
+                保证数据一致性（重要），权限控制，可以避免恶意攻击或窃取数据库信息
+创建存储过程的示例：
+
+DELIMITER $$
+
+CREATE PROCEDURE AddDefaultCourse(IN student_id VARCHAR(10))
+BEGIN
+    -- 开始事务
+    START TRANSACTION;
+
+    -- 插入成绩（假设 C004 是“大学英语”）
+    INSERT INTO scores (student_id, course_id, score)
+    VALUES (student_id, 'C004', 60);
+
+    -- 记录日志
+    INSERT INTO logs (action, info)
+    VALUES ('ADD_COURSE', CONCAT('为学生 ', student_id, ' 添加默认课程'));
+
+    -- 提交事务
+    COMMIT;
+    
+END$$
+
+DELIMITER ;
+
+查询系统中存在的存储过程
+SHOW PROCEDURE STATUS;
+如果你想只看某个数据库的存储过程，可以加 LIKE 或 WHERE：
+SHOW PROCEDURE STATUS LIKE 'Add%';
+-- 或者
+SHOW PROCEDURE STATUS WHERE Db = 'your_database_name';
+
+如果你想知道某个存储过程是怎么写的，可以用：
+SHOW CREATE PROCEDURE 存储过程名;

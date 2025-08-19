@@ -1,0 +1,94 @@
+查询数据库版本 mysql --version
+以账户密码形式登录数据库  mysql -u 用户名 -p  (以该语句登录后，接下需要输入账户密码)
+展示当前主机下所有的数据库  show DATABASE
+使用指定名称的数据库  USE 数据库名称;
+
+创建表   CREATE TABLE students (
+    ->     id VARCHAR(10) PRIMARY KEY,
+    ->     name VARCHAR(20) NOT NULL,
+    ->     gender CHAR(1) CHECK (gender IN ('M', 'F')),
+    ->     birth_date DATE,
+    ->     department VARCHAR(50)
+    -> );（->是换行的意思）
+
+往 students表里面插入数据 
+ INSERT INTO students VALUES
+    -> ('S001', '张三', 'M', '2000-03-15', '计算机学院'),
+    -> ('S002', '李四', 'F', '2001-06-20', '数学学院'),
+    -> ('S003', '王五', 'M', '1999-12-01', '计算机学院'),
+    -> ('S004', '赵六', 'F', '2000-08-10', '物理学院');
+
+查询一张表里面的全部内容  SELECT * FROM students;
+查询表，设置筛选条件  SELECT name, department FROM students WHERE gender = 'F';
+
+
+联合查询并且设置条件筛选   联合students表和scores表中 students表的id和scores表中 student_id相同的字段 筛选课程是 数据库原理的数据条目 ，返回其名称和成绩
+ SELECT s.name, sc.score
+    -> FROM students s
+    -> JOIN scores sc ON s.id = sc.student_id
+    -> JOIN courses c ON sc.course_id = c.course_id
+    -> WHERE c.course_name = '数据库原理';
+
+对返回的数据进行操作 场景 取成绩平均值 AVG函数
+SELECT c.course_name, AVG(sc.score) AS avg_score
+FROM scores sc
+JOIN courses c ON sc.course_id = c.course_id
+GROUP BY c.course_id, c.course_name;
+
+查询挂科学生的的成绩
+SELECT s.name, c.course_name, sc.score
+FROM scores sc
+JOIN students s ON sc.student_id = s.id
+JOIN courses c ON sc.course_id = c.course_id
+WHERE sc.score < 60;
+
+查询选择了数据库原理的学生
+ELECT COUNT(*) AS student_count
+FROM scores sc
+JOIN courses c ON sc.course_id = c.course_id
+WHERE c.course_name = '数据库原理';
+
+查询总分
+SELECT s.name, SUM(sc.score) AS total_score
+FROM students s
+JOIN scores sc ON s.id = sc.student_id
+WHERE s.department = '计算机学院'
+GROUP BY s.id, s.name;
+
+更新指定学生的指定科目的成绩
+PDATE scores
+SET score = 90.0
+WHERE student_id = 'S001' AND course_id = 'C001';
+
+-- 先删成绩，再删学生（或使用 ON DELETE CASCADE）
+DELETE FROM students WHERE id = 'S004';
+
+进阶 
+
+给数据库指定字段添加索引
+CREATE INDEX idx_students_name ON students(name);
+
+查询平均分高于 85 的课程名称
+SELECT c.course_name
+FROM scores sc
+JOIN courses c ON sc.course_id = c.course_id
+GROUP BY c.course_id, c.course_name
+HAVING AVG(sc.score) > 85;
+
+查询没有选修“数据结构”的学生姓名
+SELECT name
+FROM students
+WHERE id NOT IN (
+    SELECT student_id
+    FROM scores
+    WHERE course_id = 'C003'
+);
+
+给student 表添加email字段
+ALTER TABLE students ADD COLUMN email VARCHAR(50);
+
+将所有“计算机学院”学生的 email 设置为 xxx@cs.edu
+UPDATE students
+SET email = CONCAT(LOWER(name), '@cs.edu')
+WHERE department = '计算机学院';
+
