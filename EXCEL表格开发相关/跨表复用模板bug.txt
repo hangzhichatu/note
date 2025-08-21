@@ -1,0 +1,55 @@
+无法直接跨表复用模板格式，需要先声明格式对象才能复用
+否则会报错
+
+可跨表复制的CopyRow方法如下，但要注意大数据下可能出现格式丢失的问题
+
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+private static void copyRow(Row sourceRow, Row targetRow) {
+    targetRow.setHeight(sourceRow.getHeight());
+
+    for (int i = 0; i < sourceRow.getLastCellNum(); i++) {
+        Cell sourceCell = sourceRow.getCell(i);
+        if (sourceCell == null) continue;
+
+        Cell targetCell = targetRow.createCell(i);
+
+        // 跨 Workbook 复制样式
+        CellStyle newStyle = targetCell.getSheet().getWorkbook().createCellStyle();
+        
+        // 将源样式属性“克隆”到新样式
+        ((XSSFCellStyle) newStyle).cloneStyleFrom((XSSFCellStyle) sourceCell.getCellStyle());
+
+        targetCell.setCellStyle(newStyle);
+
+        // 复制值（按类型）
+        switch (sourceCell.getCellType()) {
+            case STRING:
+                targetCell.setCellValue(sourceCell.getStringCellValue());
+                break;
+            case NUMERIC:
+                targetCell.setCellValue(sourceCell.getNumericCellValue());
+                break;
+            case BOOLEAN:
+                targetCell.setCellValue(sourceCell.getBooleanCellValue());
+                break;
+            case FORMULA:
+                targetCell.setCellFormula(sourceCell.getCellFormula());
+                break;
+            case BLANK:
+                targetCell.setCellType(CellType.BLANK);
+                break;
+            default:
+                break;
+        }
+    }
+}
+
+也可以通过实现方式的变更来避免，比如sheet1 是填写的页， sheet2页是模板的页 ，隐藏模板列的方法如下
+
+// 彻底隐藏（推荐）
+workbook.setSheetHidden(1, Workbook.SHEET_STATE_VERY_HIDDEN);
+
+// 普通隐藏
+workbook.setSheetHidden(1, Workbook.SHEET_STATE_HIDDEN);

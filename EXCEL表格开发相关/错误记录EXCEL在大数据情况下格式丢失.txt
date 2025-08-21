@@ -1,0 +1,19 @@
+如果系统中生成的EXCEL表格报错  Excel xxx 发现不可读内容。是否恢复此工作簿的内容？
+如果点击接受，查看其报错信息，会发现一个非常大的单元格格式错误
+
+遇到这种错误的时候，可以这样排查。 将Excel文件后缀转成 zip格式解压 该zip文件，在其解压后的文件夹 找xl文件夹下的styles.xml文件，检查其
+大小，如果该文件大小超过10mb那么大概率就是创建EXCEL文件的时候，创建了过多的 CellStyle对象  
+
+错误案例
+
+private static copy(Row sourceRow ,Row targetRow){
+    Cell sourceCell = sourceRow.getCell(0);
+    Cell newCell = targetRow.createCell(0);
+
+    CellStyle sourceCellStyle = sourceCell.getCellStyle();
+    CellStyle newCellStyle = newCell.getSheet().getWorkbook().createCellStyle();
+    newCellStyle.cloneStyleFrom(sourceCellStyle);
+
+    .....这个方法的原目的的复用模板的格式，但是在每一单元格都新建了一个CellStyle 导致了styles.xml的大小超过了Excel的大小约束
+
+}
