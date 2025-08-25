@@ -1,0 +1,100 @@
+数据库的视图可以存储预先设置的基于原始数据库表的筛选内容，也可以实现数据隔离
+
+创建语句：
+CREATE [OR REPLACE] [ALGORITHM = {UNDEFINED | MERGE | TEMPTABLE}]
+    VIEW view_name [(column_list)]
+    AS select_statement
+    [WITH [CASCADED | LOCAL] CHECK OPTION];
+
+参数说明：
+    OR REPLACE：如果视图已存在，则替换它。
+    ALGORITHM：指定 MySQL 如何处理视图（通常用 UNDEFINED，让 MySQL 自动选择）。
+    view_name：要创建的视图名称。
+    column_list（可选）：为视图的列指定别名。
+    select_statement：定义视图内容的 SELECT 查询。这是核心。
+    WITH CHECK OPTION：确保对视图的 INSERT 或 UPDATE 操作不会产生违反视图定义 WHERE 条件的行。CASCADED 是默认值，检查所有相关视图；LOCAL 只检查当前视图。
+
+
+示范语句：
+
+假设有以下两个数据库：
+-- 员工表
+CREATE TABLE employees (
+    id INT PRIMARY KEY,
+    name VARCHAR(50),
+    department_id INT,
+    salary DECIMAL(10,2)
+);
+
+-- 部门表
+CREATE TABLE departments (
+    id INT PRIMARY KEY,
+    dept_name VARCHAR(50),
+    location VARCHAR(50)
+);
+
+-- 插入一些示例数据
+INSERT INTO departments VALUES (1, 'Engineering', 'Beijing'), (2, 'Sales', 'Shanghai');
+INSERT INTO employees VALUES 
+    (1, 'Alice', 1, 8000.00), 
+    (2, 'Bob', 1, 9000.00), 
+    (3, 'Charlie', 2, 7000.00);
+    
+
+创建一个视图显示员工的姓名、部门名称和薪水
+
+CREATE VIEW employee_dept_view AS
+SELECT 
+    e.name AS employee_name,
+    d.dept_name AS department,
+    e.salary
+FROM employees e
+JOIN departments d ON e.department_id = d.id;
+
+-- 现在你可以像查询表一样查询这个视图
+SELECT * FROM employee_dept_view;
+-- 结果:
+-- +---------------+--------------+---------+
+-- | employee_name | department   | salary  |
+-- +---------------+--------------+---------+
+-- | Alice         | Engineering  | 8000.00 |
+-- | Bob           | Engineering  | 9000.00 |
+-- | Charlie       | Sales        | 7000.00 |
+-- +---------------+--------------+---------+
+
+设置筛选条件，只显示高薪员工
+CREATE VIEW high_salary_employees AS
+SELECT name, salary, department_id
+FROM employees
+WHERE salary > 7500
+WITH CHECK OPTION;
+
+-- 查询
+SELECT * FROM high_salary_employees;
+-- 结果:
+-- +-------+---------+-----------------+
+-- | name  | salary  | department_id   |
+-- +-------+---------+-----------------+
+-- | Alice | 8000.00 |               1 |
+-- | Bob   | 9000.00 |               1 |
+-- +-------+---------+-----------------+
+
+
+
+视图常用的场景是对于需要频繁使用的联表查询
+
+视图的其他操作语句：
+
+-- 删除一个视图
+DROP VIEW employee_dept_view;
+
+-- 删除多个视图
+DROP VIEW IF EXISTS high_salary_employees, emp_salary_view;
+
+--查看视图定义
+SHOW CREATE VIEW view_name;
+
+--列出当前数据库中的所有视图
+SHOW FULL TABLES IN database_name WHERE TABLE_TYPE LIKE 'VIEW';
+-- 或者先 USE database_name;
+SHOW FULL TABLES WHERE TABLE_TYPE LIKE 'VIEW';

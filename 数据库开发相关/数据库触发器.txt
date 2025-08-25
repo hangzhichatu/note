@@ -2,7 +2,11 @@
 触发器还需要定义时间点，即通过关键字 BEFORE或AFTER操作执行前后触发。
 
 
-简单的数据库触发器定义：
+推荐的触发器最佳实践场景：自动记录操作日志，数据校验与约束，自动更新相关数据，级联操作（比如删除用户时自动删除关联数据）
+
+简单的数据库触发器定义如下：
+
+
 DELIMITER $$
 
 CREATE TRIGGER 触发器名称
@@ -14,3 +18,51 @@ BEGIN
 END$$
 
 DELIMITER ;
+
+校验的触发器trigger
+
+CREATE TRIGGER 触发器名称
+BEFORE INSERT ON student
+IF NEW.age < 0 THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '年龄不能为负数！';
+END IF;
+
+作用解析，校验年龄是否合法，如果非法 通过 SIGNAL 抛出异常中止这次数据库操作，参数说明SQLSTATE 错误码 可以自定义长度必须为5位 其中有几个默认的错误码
+'23000'：违反唯一约束
+'42000'：语法错误
+'01000'：警告
+
+参数MESSAGE_TEXT 是设置抛出异常的提示信息
+
+一下是完整创建年龄校验tirgger的SQL语句
+
+DELIMITER $$
+
+CREATE TRIGGER check_student_age
+BEFORE INSERT ON student
+FOR EACH ROW
+BEGIN
+    IF NEW.age < 0 THEN
+        SIGNAL SQLSTATE '45000' 
+        SET MESSAGE_TEXT = '年龄不能为负数！';
+    END IF;
+    
+    IF NEW.age > 150 THEN
+        SIGNAL SQLSTATE '45000' 
+        SET MESSAGE_TEXT = '年龄不能超过150岁！';
+    END IF;
+END$$
+
+DELIMITER ;
+
+与触发器相关的常用语句
+-- 查看所有触发器
+SHOW TRIGGERS;
+
+-- 查看特定表的触发器
+SHOW TRIGGERS WHERE `Table` = 'student';
+
+-- 删除触发器
+DROP TRIGGER 触发器名称;
+-- 例如：
+DROP TRIGGER after_insert_student;

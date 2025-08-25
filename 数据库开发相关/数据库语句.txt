@@ -92,3 +92,43 @@ UPDATE students
 SET email = CONCAT(LOWER(name), '@cs.edu')
 WHERE department = '计算机学院';
 
+大部分数据库里面 进行字符串拼接是使用双 || 来拼接  + 是数学加法的操作
+
+
+
+数据库创建用户 1.要使用root 账户创建
+#创建语句
+CREATE USER '用户名'@'主机' IDENTIFIED BY '密码'; 
+参数说明：
+    用户名：你想创建的用户名，例如 'dev_user'。
+    主机：
+    'localhost'：只允许该用户从本机（数据库服务器本身）连接。
+    '%'：允许该用户从任何主机连接（最常见，但也更需注意安全）。
+    '192.168.1.%'：允许从特定 IP 段连接。
+    'specific_ip'：只允许从特定 IP 地址连接。
+
+第二步 给用户赋予权限
+    语句格式
+    GRANT 权限类型 ON 数据库名.表名 TO '用户名'@'主机' [WITH GRANT OPTION];
+
+    参数说明：
+        权限类型 可以是单个权限或多个权限用逗号分隔
+        数据库名称.表名 指定具体的数据库和表 可以用通配符 * 
+        [WITH GRANT OPTION]  可选项，意思是是否允许用户把自己拥有的权限赋予给其他人
+
+
+可以赋予的权限如下：
+    ALL PRIVILEGES	拥有除 GRANT OPTION 外的所有权限（通常需要单独加 WITH GRANT OPTION 才能授权）。
+    SELECT	允许读取数据。
+    INSERT	允许插入新数据。
+    UPDATE	允许修改现有数据。
+    DELETE	允许删除数据。
+    CREATE	允许创建新数据库或表。
+    DROP	允许删除数据库或表。
+    ALTER	允许修改表结构。
+    INDEX	允许创建和删除索引。
+    CREATE VIEW	允许创建视图。
+    SHOW DATABASES	允许查看所有数据库列表。
+    CREATE ROUTINE	允许创建存储过程和函数。
+    ALTER ROUTINE	允许修改和删除存储过程和函数。
+    EXECUTE	允许执行存储过程。
