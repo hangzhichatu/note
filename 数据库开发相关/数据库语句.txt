@@ -1,7 +1,9 @@
 查询数据库版本 mysql --version
 以账户密码形式登录数据库  mysql -u 用户名 -p  (以该语句登录后，接下需要输入账户密码)
-展示当前主机下所有的数据库  show DATABASE
+展示当前主机下所有的数据库  show DATABASES
 使用指定名称的数据库  USE 数据库名称;
+查询数据库下的所有表 SHOW TABLES;
+查询表的详细信息 DESC 表名;
 
 创建表   CREATE TABLE students (
     ->     id VARCHAR(10) PRIMARY KEY,
