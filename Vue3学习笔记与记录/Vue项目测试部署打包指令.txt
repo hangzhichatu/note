@@ -1,0 +1,9 @@
+npm run build ;打包成可部署
+npm run dev; 测试启动并测试项目
+npm create vue@latest my-vue-app ;创建一个名字为my-vue-app的项目
+
+打包后的内容的说明：
+    执行npm run build 指令后，会在在项目中新建一个文件夹 dist，
+
+    dist-assets下会有两个文件 ，js文件和css，js文件是集合汇总了所有Vue3项目里面的js代码的内容，包括
+    用户自己编写的js代码和依赖的各种js代码，比如vue，改js是通过混淆的，基本不具备二次开发的能力了

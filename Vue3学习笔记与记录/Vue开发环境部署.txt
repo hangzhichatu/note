@@ -1,0 +1,11 @@
+环境配置 Vue 需要下载 
+1：node.js 下载完成后在终端输入  node -v 和 npm -v 来验证是否正常安装
+2： 使用Vite创建项目
+# 使用 npm
+npm create vue@latest my-vue-app
+
+3： 进入项目目录并启动
+cd my-vue-app
+npm install
+npm run dev
+（这个时候打开http://localhost:5173就可以看见项目）

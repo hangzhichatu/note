@@ -1,0 +1,29 @@
+一个典型的Vue文件包括以下3块标签的内容
+<template>
+//此处写html标签内容，主要用于构建前端布局
+
+</template>
+
+
+<script lang="ts">
+//此处主要写js代码和ts代码
+// 引入其他vue的模块 
+import person from './components/person.vue';
+//声明对外暴露的组件名称和信息
+export default{
+    name: 'App', // 组件名称
+    components: {
+      person
+    },
+    methods: {
+      showPersonInfo() {
+        // 这里可以添加展示个人信息的逻辑
+        alert('展示个人信息');
+        document.getElementById('personInfo')!.hidden = false;
+        document.getElementById('personInfo2')!.hidden = false;
+      }
+    }
+  }
+
+
+</script>

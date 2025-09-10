@@ -1,0 +1,15 @@
+创建一个Vue的app需要引入createApp函数，在ts文件中这样引入
+
+// 引入createApp函数用于创建应用
+import { createApp } from 'vue'
+
+然后从vue文件里面引入根组件App并且挂载
+
+// 引入根组件App
+import App from './App.vue'
+
+createApp(App).mount('#app')
+mount('#app') 的作用是：
+把 Vue 创建的应用实例（App）插入到页面中指定的 DOM 元素里，让 Vue 接管该元素的内容，并开始渲染和管理它。
+#app 是一个 CSS 选择器，指向 <div id="app"></div>
+Vue 会把 App 组件的内容渲染进去，取代它的“内部内容”

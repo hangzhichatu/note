@@ -1,0 +1,61 @@
+my-vue-app/
+├── src/                    # 源码目录（核心）
+│   ├── assets/             # 静态资源（图片、字体等）
+│   ├── components/         # 可复用的 Vue 组件
+│   ├── views/ 或 pages/    # 页面级组件（路由对应页面）
+│   ├── App.vue             # 根组件
+│   └── main.js             # 应用入口文件
+├── public/                 # 纯静态资源（不经过构建处理）
+├── index.html              # 主 HTML 文件（模板）
+├── vite.config.js          # Vite 构建工具配置文件
+├── package.json            # 项目依赖和脚本定义
+├── tsconfig.json           # TypeScript 配置（如果启用 TS）
+├── eslint.config.js        # ESLint 代码检查配置
+├── .gitignore              # Git 忽略文件配置
+└── README.md               # 项目说明文档
+
+
+ src/ —— 源码主目录 ✅（最重要）
+src/components/
+作用：存放可复用的 UI 组件。
+示例：
+Button.vue：按钮组件
+Modal.vue：弹窗组件
+Header.vue：页头组件
+特点：通常被多个页面或组件引用。
+src/views/ 或 src/pages/
+作用：存放页面级别的组件（通常与路由一一对应）。
+示例：
+HomeView.vue：首页
+AboutView.vue：关于页
+UserListView.vue：用户列表页
+注意：命名习惯是 xxxView.vue 或直接 xxx.vue。
+src/App.vue
+作用：整个应用的根组件，所有其他组件都嵌套在它里面。
+内容：
+通常包含 <router-view/>（用于显示当前路由页面）
+全局布局（如 header、footer、sidebar）
+
+App.vue的示例
+<template>
+  <header>我的网站</header>
+  <router-view />
+  <footer>© 2025</footer>
+</template>
+
+
+src/main.js 或 main.ts
+作用：应用的入口文件，负责启动 Vue 实例。
+关键代码：
+
+import { createApp } from 'vue'
+import App from './App.vue'
+import router from './router'
+import store from './store'
+createApp(App).use(router).use(store).mount('#app')
+职责：
+创建 Vue 应用实例
+注册插件（如路由、状态管理）
+挂载到 DOM
+
+

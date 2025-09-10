@@ -1,0 +1,74 @@
+老方式
+<template>
+  <div>
+    <h1>{{ title }}</h1>
+    <button @click="increment">{{ count }}</button>
+    <ChildComponent :msg="message" />
+  </div>
+</template>
+
+<script>
+import ChildComponent from './ChildComponent.vue'
+
+export default {
+  components: {
+    ChildComponent
+  },
+  data() {
+    return {
+      title: 'Hello',
+      count: 0,
+      message: 'hi'
+    }
+  },
+  methods: {
+    increment() {
+      this.count++
+    }
+  }
+}
+</script>
+
+新写法
+<template>
+  <div>
+    <h1>{{ title }}</h1>
+    <button @click="increment">{{ count }}</button>
+    <ChildComponent :msg="message" />
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import ChildComponent from './ChildComponent.vue'
+
+// 数据
+const title = 'Hello'
+const count = ref(0)
+const message = 'hi'
+
+// 方法
+function increment() {
+  count.value++
+}
+</script>
+
+新老功能对比
+原功能	<script setup> 写法
+data()	使用 ref() 或 reactive() 定义响应式变量
+methods	直接定义函数
+computed	使用 computed() 函数
+props	使用 defineProps()
+emits	使用 defineEmits()
+components	直接 import 组件即可
+生命周期钩子	直接导入并调用，如 onMounted(() => {...})
+
+
+注意：在使用setup语法糖的同时也可以使用旧的export方法default来实现某些需求
+如下如果我需要显式的给模块命名
+<script>
+// 普通 <script> 块（不带 setup）
+export default {
+  name: 'CustomTreeNode' // 显式命名
+}
+</script>
