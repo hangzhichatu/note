@@ -1,0 +1,124 @@
+在 Vue 3 的 export default {} 中，我们定义的是一个组件选项对象（Options API），它决定了组件的行为、结构和逻辑。
+可以通过使用setup语法糖来优化这种命名格式，但是有必要了解老式的Vue2的重要语法
+
+1.setup
+<script>
+import { ref, computed } from 'vue'
+
+export default {
+  setup() {
+    const count = ref(0)
+    const doubled = computed(() => count.value * 2)
+    return { count, doubled }
+  }
+}
+</script>
+
+2.data 定义响应式数据
+data() {
+  return {
+    message: 'Hello',
+    count: 0,
+    user: null
+  }
+}
+
+3.methods 定义组件的方法
+methods: {
+  increment() {
+    this.count++
+  },
+  fetchData() {
+    // 调用 API
+  }
+}
+
+4. computed
+用途：定义计算属性，基于响应式数据派生出新值，自动缓存。
+computed: {
+  fullName() {
+    return this.firstName + ' ' + this.lastName
+  },
+  isActive: {
+    get() { return this.status === 'active' },
+    set(val) { this.status = val ? 'active' : 'inactive' }
+  }
+}
+比 methods 更高效（有缓存，不重复执行）。（重复执行的意思就是有多个相同的methods绑定属性的话，使用计算属性只会计算一次，而method方式每个数据都会计算一次）
+
+5.watch
+监听数据变化，执行副作用（如异步操作、复杂逻辑
+watch: {
+  count(newVal, oldVal) {
+    if (newVal > 10) {
+      console.log('超过10了')
+    }
+  },
+  '$route': function(to, from) {
+    // 监听路由变化
+  }
+}
+
+6.components
+注册局部组件，供模板使用。
+import ChildComponent from './ChildComponent.vue'
+
+export default {
+  components: {
+    ChildComponent,
+    // 或命名：MyChild: ChildComponent
+  }
+}
+
+7.props
+接收父组件传递的数据，是父子通信的核心。
+props: {
+  title: String,
+  count: {
+    type: Number,
+    default: 0,
+    required: true
+  },
+  user: {
+    type: Object,
+    default: () => ({})
+  }
+}
+
+8.emits
+声明组件会触发的自定义事件（Vue 3 推荐显式声明）。
+emits: ['update:modelValue', 'submit', 'close']
+
+// 使用
+this.$emit('submit', formData)
+
+9.name
+给组件命名，用于：
+
+递归组件（自己调用自己）
+调试时显示组件名
+keep-alive 缓存
+
+name: 'UserProfile'
+
+
+10.各种生周期钩子，在相对于的生命周期的时候自动执行
+钩子	用途
+created	数据已初始化，可访问 data、props，常用于发起 API 请求
+mounted	组件已挂载到 DOM，可操作真实 DOM（如初始化图表）
+updated	数据更新后调用（慎用，避免无限循环）
+beforeUnmount	组件销毁前，清理定时器、事件监听等
+errorCaptured	捕获子组件错误（高级）
+
+export default {
+  created() {
+    this.fetchData()
+  },
+  mounted() {
+    console.log('组件已挂载')
+  },
+  beforeUnmount() {
+    clearInterval(this.timer)
+  }
+}
+

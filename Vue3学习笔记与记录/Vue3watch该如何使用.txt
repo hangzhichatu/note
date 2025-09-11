@@ -1,0 +1,160 @@
+watch
+监听数据变化，执行副作用（如异步操作、复杂逻辑)
+watch定义是这样定义的
+watch: {
+  count(newVal, oldVal) {
+    if (newVal > 10) {
+      console.log('超过10了')
+    }
+  },
+  '$route': function(to, from) {
+    // 监听路由变化
+  }
+}
+
+这里介绍下watch方法的三个参数  watch($1,$2,$3)
+$1 输入的是被监听的对象 可以输入的对象类型很多，但此处先按下不表，稍后详细介绍。
+$2 该参数是一个回调函数，当监视的对象发生改变时触发该回调函数
+$3 可选配置项，它能够控制watch执行的一些细节
+
+
+监视分情况讨论
+情况一 监视由ref 定义的 对象类型 数据，监视的是对象的地址值，若想监视对象内部属性的变化，需要手动开启深度监视
+watch(person,(newVal,oldVal)=>{
+    console.log('person变化了'，newVal,oldVal)
+},{deep:true})
+注意：这里传入回调函数的newVal和OldVal是解包后的值，不许使用 .value方法来获取值
+
+情况二 监视由监听一个使用 reactive() 创建的响应式对象
+回调函数 newVal和OldVal 是响应式对象本身 在watch的默认模式下，是浅层监听，即只有当该对象被重新赋值而不是该对象下某个属性的值发生改变的时候触发
+如果需要监听对象内部属性的变化，必须在第三个参数配置 deep:true来手动开启深层监听
+
+情况三 Getter 函数 (计算属性风格) 即被监听对象是一个表达式，或者函数的返回值
+可以监听任意复杂表达式或多个数据源。
+特点：
+watch 会立即执行这个函数，并追踪它内部访问的所有响应式依赖。
+当任何一个依赖变化时，回调就会触发。
+常用于监听多个 ref 或 reactive 对象的组合。
+
+这里提供两个示例来展示各种情况
+import { ref, watch } from 'vue';
+
+const firstName = ref('John');
+const lastName = ref('Doe');
+const isLoggedIn = ref(false);
+
+// 监听一个组合表达式
+watch(
+  () => `${firstName.value} ${lastName.value}`,
+  (newName, oldName) => {
+    console.log(`全名变化: ${oldName} -> ${newName}`);
+  }
+);
+
+此处通过函数返回了多个不同来源的响应式数据
+// 监听多个数据源
+watch(
+  () => [firstName.value, lastName.value, isLoggedIn.value],
+  ([newFirst, newLast, newLogin], [oldFirst, oldLast, oldLogin]) => {
+    console.log('多个值变化了', { newFirst, newLast, newLogin });
+  }
+);
+
+情况四  数组 (包含多种数据源)
+数组中的每个元素可以是 ref、reactive 对象，或者是一个 getter 函数。
+回调函数的参数也是一个数组，包含每个数据源的新值和旧值。比如如下示范
+
+import { ref, reactive, watch } from 'vue';
+
+const count = ref(0);
+const person = reactive({ name: 'Alice' });
+const message = ref('Hello');
+
+watch(
+  [count, () => person.name, message], // 混合了 ref、getter 和 reactive
+  ([newCount, newName, newMsg], [oldCount, oldName, oldMsg]) => {
+    console.log('多个数据变化:', { newCount, newName, newMsg });
+  }
+);
+
+被监听对象	类型	回调参数 (newVal, oldVal)	是否需要 deep 监听内部变化	典型用途
+ref	Ref<T>	解包后的值 (T)	是（对于对象/数组 ref）	监听基本类型或简单对象
+reactive	T (对象)	响应式对象本身	是	监听响应式对象
+Getter 函数	() => T	函数返回值	根据函数内部逻辑决定	监听复杂表达式或多源组合
+数组	(Ref<T> | () => T | T)[]	值数组 (T[])	数组元素内部需要时	同时监听多个独立数据源
+
+
+回调函数
+参考上述
+
+watch函数可选参数三
+配置选项对象
+
+deep: boolean
+作用：是否深度监听。
+当监听一个复杂对象或数组时，如果只修改其内部属性（如 person.name = 'Alice'），浅层监听不会触发。
+设置 deep: true 后，会递归监听对象所有嵌套属性的变化。
+默认值：false
+watch(person, (newVal, oldVal) => {
+  console.log('person 变化了', newVal, oldVal);
+}, { deep: true });
+
+2. immediate: boolean
+作用：是否在侦听开始时立即执行一次回调函数。
+默认情况下，watch 是“懒执行”的，即只有当被监听的数据发生变化后才会执行回调。
+设置 immediate: true 后，回调函数会在侦听器创建时立刻执行一次，此时 newVal 就是当前值，oldVal 通常是 undefined 或与 newVal 相同（取决于实现）。
+默认值：false
+watch(person, (newVal, oldVal) => {
+  console.log('person 变化了', newVal, oldVal);
+  // 即使 person 没变，这里也会先执行一次
+}, { immediate: true });
+
+immediate的作用可以用于从数据源获取原始展示数据，只需要在回调函数里面写获取数据的方法即可，而监视那些可以作为回调函数参数的数据
+当这些参数变化时候，自动修改展示的数据
+
+3. flush: 'pre' | 'post' | 'sync'
+作用：控制回调函数的触发时机（刷新时机）。这涉及到 Vue 的响应式系统和 DOM 更新的调度。
+可选值：
+'pre'：
+回调函数会在组件更新前执行（在组件的 beforeUpdate 钩子之前）。
+此时 DOM 尚未更新，但你可以安全地访问当前的 DOM 状态。
+这是默认值。
+适用场景：你想在 DOM 更新前读取当前状态（如滚动位置），然后根据新数据做准备。
+'post'：
+回调函数会在组件更新后执行（在组件的 updated 钩子之后）。
+此时 DOM 已经完成更新，可以安全地访问更新后的 DOM 元素。
+适用场景：你需要操作或查询更新后的 DOM（如获取元素尺寸、触发动画）。
+'sync'：
+回调函数会在数据变化后同步立即执行，不经过 Vue 的异步调度队列。
+性能开销大，可能影响渲染性能，应谨慎使用。
+适用场景：极少数需要强同步响应的场景（如某些第三方库集成）。
+
+即这个参数常用的配置值是pre和post对于前处理和后处理（如果不需要从前端获取页面的DOM信息的话，两者没什么区别）
+
+watch(person, (newVal, oldVal) => {
+  console.log('DOM 更新后执行');
+  // 可以安全地 querySelector 获取新 DOM
+}, { flush: 'post' });
+
+
+4. onTrack 和 onTrigger (调试专用)
+作用：这两个钩子函数用于调试响应式系统，一般在开发阶段使用。
+onTrack：
+当一个响应式依赖被追踪（track）时触发。
+例如，watch 开始监听 person.name 时会触发。
+onTrigger：
+当一个依赖被触发更新（trigger）时触发。
+例如，person.name 被修改，导致 watch 回调要执行时触发。
+
+watch(person, (newVal, oldVal) => {
+  console.log('变化了');
+}, {
+  onTrack(e) {
+    console.log('被追踪:', e);
+  },
+  onTrigger(e) {
+    console.log('被触发:', e);
+  }
+});
+
+注意：使用npm build指令的时候，这些钩子会被忽视，是一个用于开发测试环节的方法
