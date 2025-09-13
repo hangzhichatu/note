@@ -1,0 +1,70 @@
+定义接口interface 的目的，在于使用编辑器的时候约束定义的数据类型和特点
+按照通常的开发约定，定义interface的index.ts文件放置于路径 src/types/ 文件夹下
+
+定义接口的语句如下
+
+//定义一个接口
+export interface PersonInter{
+    id:string;
+    age:number;
+    name:string;
+}
+
+如果想在自定义的类型基础上拓展类型，比如 列表list类型的PersonInter对象可以用以下两者方式定义（两者方式是等价的）
+
+//一个自定义类型 两者定义方式等价
+export type persons2 = Array<PersonInter>;
+export type Persons = PersonInter[];
+
+//数据传递
+在使用定义类型的vue文件需要提前引用
+import {type Persons,type PersonInter} from './types/index';//这里演示的引用多种类型的语句
+
+使用自定义类型  定义的响应式数据
+let personList: Persons =reactive<Persons>( [
+    { id: '1', age: 25, name: 'Alice' },
+    { id: '2', age: 30, name: 'Bob' },
+    { id: '3', age: 28, name: 'Charlie' }
+  ]);
+
+这里假设子模块的 名字是 person913.Vue
+
+在父级模块中，我们传递了两个数据，一个是普通的string类型的数据，另外一个是 自定义的Person数据类型，为响应式数据
+
+<person913 person4 ="sad" :person="personList"></person913>  //如此调用
+
+在子模块中，使用了 v-for展示了传递了整个响应式数据和字符
+
+<template>
+   <div class = "person">
+        <br>
+        <h2>{{person4}}</h2>   
+        <div v-for ="(item,index) in person" :key="index">
+            <p>第{{index + 1}}个人</p>
+            <p>姓名：{{item.name}}</p>
+            <p>年龄：{{item.age}}</p>
+        </div>
+   </div>
+        
+</template>
+
+<script lang="ts" setup name="person913">
+    import { defineProps, withDefaults } from 'vue';
+    import { type Persons } from '../types/index';
+    const props = defineProps<{ person: Persons; person4: string }>();
+
+</script>
+
+针对defineProps方法这里有可配置项的说明：
+
+//只接收list
+    //defineProps(['person'])
+    //接收list＋限制类型
+    //defineProps<{Persons:person}>()
+    //接收list + 限制类型 + 限制必要性 + 加指定默认值（默认是必传的，这里演示不必传）
+    // withDefaults(defineProps<{person?:Persons}>(), {
+    //    person:()=> [{id:'4',age:66,name:'传说之下'}]
+    // })
+
+配置默认项需要引用withDefaults 从vue中
+其次，在设置默认值的时候，需要设置的默认值要是一个函数的返回值。

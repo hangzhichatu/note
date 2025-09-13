@@ -1,0 +1,91 @@
+在 Vue 中，双向绑定（Two-way Binding） 是指数据模型（Data Model）和视图（View，通常是表单元素）之间的自动同步：
+
+数据 → 视图：当 JavaScript 中的数据变化时，页面上的输入框、选择框等内容会自动更新。
+视图 → 数据：当用户在页面上修改了输入框的内容时，JavaScript 中对应的数据也会自动更新。
+Vue 提供了非常简洁的语法来实现这一点。
+
+核心指令：v-model
+Vue 实现双向绑定的主要方式是使用 v-model 指令。
+
+<template>
+  <div>
+    <!-- 文本输入框 -->
+    <input v-model="message" placeholder="请输入内容">
+    <p>你输入的是: {{ message }}</p>
+
+    <!-- 多行文本 (textarea) -->
+    <textarea v-model="text"></textarea>
+    <p>文本内容: {{ text }}</p>
+
+    <!-- 复选框 (单个布尔值) -->
+    <input type="checkbox" v-model="isChecked">
+    <label>是否同意</label>
+    <p>状态: {{ isChecked ? '已同意' : '未同意' }}</p>
+
+    <!-- 复选框组 (绑定到数组) -->
+    <div>
+      <input type="checkbox" value="Vue" v-model="skills">
+      <label>Vue</label>
+
+      <input type="checkbox" value="React" v-model="skills">
+      <label>React</label>
+
+      <input type="checkbox" value="Angular" v-model="skills">
+      <label>Angular</label>
+    </div>
+    <p>技能: {{ skills }}</p>
+
+    <!-- 单选按钮 -->
+    <div>
+      <input type="radio" value="男" v-model="gender">
+      <label>男</label>
+
+      <input type="radio" value="女" v-model="gender">
+      <label>女</label>
+    </div>
+    <p>性别: {{ gender }}</p>
+
+    <!-- 下拉选择框 -->
+    <select v-model="selected">
+      <option disabled value="">请选择</option>
+      <option>Apple</option>
+      <option>Banana</option>
+      <option>Orange</option>
+    </select>
+    <p>选择的水果: {{ selected }}</p>
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue';
+
+// 基本类型
+const message = ref('');
+const text = ref('');
+const isChecked = ref(false);
+const skills = ref([]); // 数组用于多选
+const gender = ref('');  // 单选
+const selected = ref(''); // 下拉选择
+</script>
+
+
+V-model 是一个语法糖
+它背后自动完成了两件事：
+v-bind:value (或特定元素的绑定属性)
+v-on:input (或特定元素的事件，如 change)
+
+Vue:
+<!-- 使用 v-model (推荐，简洁) -->
+<input v-model="message">
+
+<!-- 等价于下面的手动写法 -->
+<input 
+  :value="message" 
+  @input="message = $event.target.value"
+>
+
+Vue 3 默认行为
+在 Vue 3 中，v-model 在自定义组件上默认：
+
+绑定 modelValue prop。
+监听 update:modelValue 事件
