@@ -1,0 +1,13 @@
+#语句
+
+#链接redis
+redis-cli -h 127.0.0.1 -p 6379 -a yourpassword123
+
+> ping
+PONG
+
+> set name "Alice"
+OK
+
+> get name
+"Alice"

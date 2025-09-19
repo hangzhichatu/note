@@ -1,0 +1,35 @@
+#环境部署 #操作指令
+redis目前只支持在Linux/macOS ,但是github上面也有微软维护的redis版本
+
+操作指令
+# 从官网下载压缩包
+wget https://download.redis.io/releases/redis-7.2.5.tar.gz
+
+# 解压
+    x：extract，表示解压。  
+    z：表示使用 gzip 解压缩（因为 .gz 是 gzip 格式）。
+    f：指定文件名，后面紧跟文件名
+tar xzf redis-7.2.5.tar.gz
+
+#进入解压后的根目录文件夹
+cd redis-7.2.5
+
+#编译
+    make 是一个构建工具，它会读取当前目录下的 Makefile 文件（由 Redis 提供），自动执行编译过程。
+    编译完成后，会在 src 目录下生成可执行文件
+make
+
+#启动服务
+（调试用）
+src/redis-server
+# 使用配置文件
+src/redis-server redis.conf &
+
+redis.conf参考内容
+    
+#设置开机自启服务
+sudo vim /etc/systemd/system/redis.service (内容参考文件夹下同名文件)
+
+#启用服务语句
+sudo systemctl enable redis
+sudo systemctl start redis

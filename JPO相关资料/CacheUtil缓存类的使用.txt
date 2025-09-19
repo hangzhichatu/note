@@ -1,0 +1,7 @@
+包名称：
+com.matrixone.apps.domain.util.CacheUtil
+使用方法：
+CacheUtil.setCacheObject(Context context,String 缓存标识符,Object 待缓存的对象);//设置缓存对象
+CacheUtil.getCacheObject(Context context,String 缓存标识符);//获取缓存对象 （获取返回对象的时候，需要进行强制类型转换）
+CacheUtil.clearCache(Context context);//清空缓存
+
