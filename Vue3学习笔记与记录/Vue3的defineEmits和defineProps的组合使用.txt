@@ -1,0 +1,36 @@
+#最佳实践 #代码展示
+defineEmits 常与 defineProps 配合，实现自定义组件的 v-model。
+
+@子组件定义：
+    <!-- MyInput.vue -->
+    <script setup lang="ts">
+    defineProps<{
+    modelValue: string
+    }>()
+
+    const emit = defineEmits<{
+    (e: 'update:modelValue', value: string): void
+    }>()
+
+    function onInput(e: Event) {
+    const value = (e.target as HTMLInputElement).value
+    emit('update:modelValue', value)
+    }
+    </script>
+
+    <template>
+    <input :value="modelValue" @input="onInput" />
+    </template>
+
+@父组件定义：
+    <!-- 父组件 -->
+    <template>
+    <MyInput v-model="text" />
+    <!-- 等价于： -->
+    <!-- <MyInput :modelValue="text" @update:modelValue="text = $event" /> -->
+    </template>
+
+    <script setup>
+    import { ref } from 'vue'
+    const text = ref('hello')
+    </script>

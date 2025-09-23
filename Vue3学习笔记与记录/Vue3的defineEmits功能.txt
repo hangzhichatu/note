@@ -1,0 +1,98 @@
+#理论说明 #具体实现 #代码实例说明
+
+定义
+defineEmits 是一个 编译时宏（compile-time macro），用于在 <script setup> 中声明子组件可以触发的事件。
+它的功能是这样的，子组件定义了一些事件 （emit对象）它允许子组件在执行程序的时候手动触发一个事件，并且向父级
+暴露，父级组件需要监听这些事件，并且给这些事件绑定处理的方法
+
+即：
+子组件通过 emit 触发一个事件
+父组件通过 @事件名 监听并响应
+
+@子组件如何定义
+        <!-- ChildComponent.vue -->
+        <script setup>
+        // 声明可以触发的事件
+        const emit = defineEmits(['update', 'delete', 'change'])
+
+        // 触发事件
+        function handleClick() {
+        emit('update', '新的值') // 第二个参数是传递的数据
+        }
+
+        function handleDelete() {
+        emit('delete', { id: 123 })
+        }
+        </script>
+
+        <template>
+        <button @click="handleClick">更新</button>
+        <button @click="handleDelete">删除</button>
+        </template>
+
+这里父组件定义了增删改常见事件监听的处理逻辑
+
+        <!-- ChildComponent.vue -->
+        <script setup>
+        // 声明可以触发的事件
+        const emit = defineEmits(['update', 'delete', 'change'])
+
+        // 触发事件
+        function handleClick() {
+        emit('update', '新的值') // 第二个参数是传递的数据
+        }
+
+        function handleDelete() {
+        emit('delete', { id: 123 })
+        }
+        </script>
+
+        <template>
+        <button @click="handleClick">更新</button>
+        <button @click="handleDelete">删除</button>
+        </template>
+
+
+@emit进阶，子组件除了简单定义emit事件意外，也可以对事件进行简单的筛选，最常见的就是子组件传递给父级的数据进行空值校验和类型校验
+
+const emit = defineEmits(['event1', 'event2'])//原，通过数组的方式声明事件
+
+@这里增加对传递的参数的校验
+
+    const emit = defineEmits({
+    // 简单事件
+    update: null,
+
+    // 带验证的事件
+    submit: (payload) => {
+        if (payload.username && payload.password) {
+        return true
+        } else {
+        console.warn('submit 事件缺少必要参数！')
+        return false
+        }
+    },
+
+    // 多参数验证
+    change: (value, oldValue) => typeof value === 'string'
+    })
+
+    方法 defineEmits({参数1:参数2 , submit:参数3,change:参数4 });
+    参数1 你定义emit事件名称
+    参数2 指定的返回参数类型 如果值为null则为允许所有类型的数据放回
+    参数3 参数为一个函数或者表达式，其返回值为false的时候则不提交本次事件 （上述代码传入的参数是一个函数的形式）
+    参数4 返回值为一个函数或者表达式 其返回值为false的时候则不提交本次事件 （上述代码传入的参数是一个表达式的形式）
+
+@通过ts能够以很简单的方式就添加对数据类型的限制
+    <script setup lang="ts">
+    const emit = defineEmits<{
+    (e: 'update', value: string): void
+    (e: 'delete', id: number): void
+    (e: 'change', value: string, oldValue: string): void
+    }>()
+
+    // 使用
+    emit('update', 'hello')        // ✅ 正确
+    emit('delete', 123)            // ✅ 正确
+    // emit('update', 123)         // ❌ 类型错误！
+    </script>
