@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>带参数的 iframe 跳转</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    label {
+      display: inline-block;
+      width: 100px;
+    }
+    input, select {
+      padding: 8px;
+      width: 250px;
+    }
+    button {
+      padding: 10px 20px;
+      margin-top: 10px;
+    }
+    #contentFrame {
+      width: 100%;
+      height: 600px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>通过手动输入参数控制 iframe 内容</h2>
+
+  <!-- 手动输入参数 -->
+  <div class="form-group">
+    <label for="userId">用户ID：</label>
+    <input type="text" id="userId" placeholder="请输入用户ID" value="1001">
+  </div>
+
+  <div class="form-group">
+    <label for="theme">主题：</label>
+    <select id="theme">
+      <option value="light">浅色</option>
+      <option value="dark">深色</option>
+      <option value="blue">蓝色</option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label for="site">选择网站：</label>
+    <select id="site">
+      <option value="https://httpbin.org/get">HTTP 测试接口</option>
+      <option value="https://www.google.com/search">Google 搜索</option>
+      <option value="https://developer.mozilla.org/zh-CN/search">MDN 搜索</option>
+    </select>
+  </div>
+
+  <button onclick="loadWithParams()">加载页面并传参</button>
+
+  <!-- iframe 显示区域 -->
+  <iframe 
+    id="contentFrame" 
+    src="about:blank" 
+    frameborder="0">
+  </iframe>
+
+  <script>
+    function loadWithParams() {
+      // 获取用户输入
+      const userId = document.getElementById('userId').value;
+      const theme  = document.getElementById('theme').value;
+      const site   = document.getElementById('site').value;
+
+      if (!userId || !site) {
+        alert('请填写必要信息！');
+        return;
+      }
+
+      // 构造带参数的 URL
+      let url = site;
+
+      // 根据不同目标网站，拼接不同参数
+      if (site.includes('httpbin.org/get')) {
+        url += `?userId=${encodeURIComponent(userId)}&theme=${encodeURIComponent(theme)}`;
+      } 
+      else if (site.includes('google.com/search')) {
+        url += `?q=user${userId}&hl=zh-CN`;
+      } 
+      else if (site.includes('developer.mozilla.org/zh-CN/search')) {
+        url += `?q=user${userId}&topic=js`;
+      }
+
+      // 加载到 iframe
+      document.getElementById('contentFrame').src = url;
+
+      console.log('加载 URL:', url);
+    }
+  </script>
+
+</body>
+</html>

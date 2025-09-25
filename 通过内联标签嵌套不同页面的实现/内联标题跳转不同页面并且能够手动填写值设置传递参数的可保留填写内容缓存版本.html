@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>带缓存记忆的 iframe 参数跳转</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    label {
+      display: inline-block;
+      width: 100px;
+    }
+    input, select {
+      padding: 8px;
+      width: 250px;
+    }
+    button {
+      padding: 10px 20px;
+      margin-top: 10px;
+      background-color: #007cba;
+      color: white;
+      border: none;
+      border-radius: 4px;
+    }
+    button:hover {
+      background-color: #005a87;
+    }
+    #contentFrame {
+      width: 100%;
+      height: 600px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      margin-top: 20px;
+    }
+    .tip {
+      color: #666;
+      font-size: 0.9em;
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>带参数记忆的 iframe 跳转</h2>
+  <p class="tip">输入参数后点击加载，下次打开会自动填充。</p>
+
+  <!-- 参数输入区 -->
+  <div class="form-group">
+    <label for="userId">用户ID：</label>
+    <input type="text" id="userId" placeholder="请输入用户ID">
+    <p class="tip">上次输入: <span id="lastUserId">无</span></p>
+  </div>
+
+  <div class="form-group">
+    <label for="theme">主题：</label>
+    <select id="theme">
+      <option value="light">浅色</option>
+      <option value="dark">深色</option>
+      <option value="blue">蓝色</option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label for="site">选择网站：</label>
+    <select id="site">
+      <option value="https://httpbin.org/get">HTTP 测试接口</option>
+      <option value="https://www.google.com/search">Google 搜索</option>
+      <option value="https://developer.mozilla.org/zh-CN/search">MDN 搜索</option>
+    </select>
+  </div>
+
+  <button onclick="loadWithParams()">加载页面并保存参数</button>
+
+  <!-- iframe 显示区域 -->
+  <iframe 
+    id="contentFrame" 
+    src="about:blank" 
+    frameborder="0">
+  </iframe>
+
+  <script>
+    const userIdInput = document.getElementById('userId');
+    const themeSelect = document.getElementById('theme');
+    const siteSelect  = document.getElementById('site');
+    const lastUserIdSpan = document.getElementById('lastUserId');
+
+    // 1. 页面加载时：从 localStorage 读取上次保存的参数
+    function loadSavedParams() {
+      const saved = localStorage.getItem('iframeParams');
+      if (saved) {
+        try {
+          const params = JSON.parse(saved);
+          if (params.userId) userIdInput.value = params.userId;
+          if (params.theme) themeSelect.value = params.theme;
+          if (params.site)  siteSelect.value = params.site;
+
+          // 显示上次的用户ID（用于提示）
+          lastUserIdSpan.textContent = params.userId || '无';
+        } catch (e) {
+          console.error('解析缓存失败:', e);
+        }
+      }
+    }
+
+    // 2. 保存参数到 localStorage
+    function saveParams() {
+      const params = {
+        userId: userIdInput.value,
+        theme:  themeSelect.value,
+        site:   siteSelect.value
+      };
+      localStorage.setItem('iframeParams', JSON.stringify(params));
+      lastUserIdSpan.textContent = userIdInput.value || '无';
+    }
+
+    // 3. 加载 iframe 并保存参数
+    function loadWithParams() {
+      const userId = userIdInput.value;
+      const theme  = themeSelect.value;
+      const site   = siteSelect.value;
+
+      if (!userId || !site) {
+        alert('请填写必要信息！');
+        return;
+      }
+
+      // 构造带参 URL
+      let url = site;
+      if (site.includes('httpbin.org/get')) {
+        url += `?userId=${encodeURIComponent(userId)}&theme=${encodeURIComponent(theme)}`;
+      } else if (site.includes('google.com/search')) {
+        url += `?q=user${encodeURIComponent(userId)}&hl=zh-CN`;
+      } else if (site.includes('developer.mozilla.org/zh-CN/search')) {
+        url += `?q=user${encodeURIComponent(userId)}&topic=js`;
+      }
+
+      // 加载 iframe
+      document.getElementById('contentFrame').src = url;
+
+      // 保存当前参数到缓存
+      saveParams();
+    }
+
+    // 页面加载完成后自动读取缓存
+    window.addEventListener('load', loadSavedParams);
+  </script>
+
+</body>
+</html>

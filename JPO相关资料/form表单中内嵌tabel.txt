@@ -1,0 +1,29 @@
+form行需要配置的信息
+
+Setting:
+ Field Type : pragramHtmlOutput 设置单元格格式
+ Height ： xxx（高度xxx替换成数字，单位是像素）
+ Hide Label : true/false (默认内嵌tabel页面是否展开)
+ Url : "内嵌tabel的Url地址" 类似于  ${COMMON_DIR}/emxIndentedTable.jsp?xxx（其余内容正常写）
+
+ 关键setting 这里是将Url的页面的内容转化成 txt/html的文本格式输出的方法
+ function : fieldURL
+ program : emxGenericFields 
+
+ 可选setting
+ No Frame :FALSE/TRUE 无外框？
+ Border Bottom : TRUE/FALSE 看源码是选择false的话外观上会发生变化
+
+
+ emxGenericFields源码解读，其中构成展示其内容的关键部分如下
+
+sbResult.append("<iframe type='text/html' ")
+        .append("id='frameField").append(SName).append("' ")
+        .append("name='frameField").append(sName).append("' ")
+        .append("src='").append(sURL)
+        .append("&hideAllHeader=true&portalMode=true&objectId=")
+        .append(sOID).append("' ")
+        .append("width='100%' frameBorder='0'>")
+        .append("</iframe>");
+本质是返回一个通过ifram内联标签来展示不同页面的内容
+

@@ -1,0 +1,28 @@
+path建立对象是通过中间对象上的path来实现的
+
+举例，一个物理产品（比如EBOM）和一个文档对象建立关联 在胖客户端是通过如下方式建立的
+
+假设物理产品是from端，文档是to端
+
+物理产品会创建一个对象
+
+PLMDocConnection类型的对象 它 是PLMConnection的子类
+物理产品和PLMDocConnection 通过关系  from[VPLMrel/PLMConnection/V_Owner].to 关联 PLMDocConnection类型的对象是to端
+
+打印PLMDocConnection对象 select paths.path即可查看该对象上的path  ，打印 PLMDocConnection 这个类型还可以查询其 path的类型
+print type PLMDocConnection select pathtype;
+
+
+print bus PLMDocConnection对象Id select paths.path.id;//可以查询其关联的path的id
+print bus PLMDocConnection对象Id select paths.path.value;//可以查询其关联的path的值
+
+从path 查询 PLMDocConnection对象Id 可以这样
+
+print path path对象的Id select owner.id;//查询path所属的对象的id
+
+path的value构成由如下内容构成
+
+[kind businessobject|connection] type TYPE_NAME physicalid ID logicalid ID majorid ID proxystamp STAMP_VALUE relevant 
+BOOLEAN_VALUE
+
+[BusinessObject|connection],类型名称,关联对象的物理Id,关联对象的逻辑Id,关联对象的主要版本ID,时间戳,是否关联（这里填写布尔值）

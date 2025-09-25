@@ -231,3 +231,7 @@ BackgroundProcess backgroundProcess = new BackgroundProcess();
 backgroundProcess.submitJob(context,"JPO名称"，"方法名称"，args参数 String[] 型，null);//最后一个参数
 作用未知
 
+//通过准备修改的对象更改获取关联的CA 
+Map changeObjectInprocessed = ChangeUtil.getChangeObjectsInProcessed(context,StringList.asList("id"),{id},1);
+//通过已实现的更改获取关联的CA
+Map changeObjectInprocessed = ChangeUtil.getChangeObjectsInRealized(context,StringList.asList("id"),{id},1);
