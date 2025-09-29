@@ -1,0 +1,4 @@
+conf/logging.properties 
+例如，我想修改Catalina的输出日志编码格式
+搜索catalina ，找到大概位置 。修改对应的 xxx.encoding 条目后的内容  
+乱码一般就是 UTF-8和 GBK 修改就行。这个集成IDEA环境有该日志输出bug是因为window系统默认的字符集格式是GBK

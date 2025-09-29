@@ -1,0 +1,4 @@
+参考访问tomcat的默认项目host-manager和manager里面的资源的时候，需要输入账户和密码
+如何配置：
+    找conf目录下tomcat-users.xml (默认情况下，账户密码都是被注释掉的如果你想启用账号密码登录，取消并编辑该配置文件即可 找其中的 tomcat-users标签)
+

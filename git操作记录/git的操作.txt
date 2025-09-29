@@ -1,0 +1,10 @@
+git init 初始化当前文件作为git仓库
+git reset  取消上次git add的操作内容
+git add '文件夹或者文件' 添加单个对象
+git add . 添加当前文件夹下所有的文件对象
+git commit m xxxx 确认commit
+git config --global user.email "1726866385@qq.com"  配置当前库的user的信息
+git config --global user.name "zhenghang" 
+git branch -M main 创建主分支
+git remote add origin https://github.com/hangzhichatu/Studynode.git 绑定远程仓库
+git push  -u origin main 执行push操作

@@ -1,0 +1,18 @@
+ 1.为tomcat和IDEA建立关系 ，在 IDEA登录界面，点击Customize → All setting  → build，Excution，Deployment → Application service  
+                                                            设置 → 构建、执行、部署 → 应用程序服务器
+    点击➕ 选择 tomcat服务器 然后选择服务器的路径到tomcat服务器的bin目录的父级目录下
+
+
+
+ 2.使用IDEA建立一个javaWEB工程在WEB工程中开发代码
+    将一个普通的java模块转换为web项目  
+     ①.给该模块添加tomcat作为开发依赖 Project Settings → Modules  选择需要添加依赖的模块 ，在Dependencies页签下
+     点击加号选择 对于的tomcat服务器版本的jar包
+    ②。给当前模块添加web项目组件，右键该模块  Add Framework Support  勾选 Web Application 选择版本点击Ok
+
+    这时候，项目里面会多一个 web文件
+
+ 3.使用IDEA将工程建成一个可以发布的app
+点击 Build → Build Artifacts
+
+ 4.使用IDEA将构建好的app部署到tomcat中启动

@@ -235,3 +235,9 @@ backgroundProcess.submitJob(context,"JPO名称"，"方法名称"，args参数 St
 Map changeObjectInprocessed = ChangeUtil.getChangeObjectsInProcessed(context,StringList.asList("id"),{id},1);
 //通过已实现的更改获取关联的CA
 Map changeObjectInprocessed = ChangeUtil.getChangeObjectsInRealized(context,StringList.asList("id"),{id},1);
+
+//获取 指定对象id的访问url
+String baseUrl = "https://3ds.com/3dspace"
+String url = MailUtil.getObjectLinkURI(context,baseUrl,Id);
+
+前端可以这样 写 html输出  <a href="javascript:emxTableColumnLinkClick('"+url+"')">{显示名称}</a>
