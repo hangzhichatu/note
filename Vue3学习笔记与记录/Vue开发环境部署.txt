@@ -4,8 +4,15 @@
 # 使用 npm
 npm create vue@latest my-vue-app
 
+执行指令后会要求你选择一些设定，如果只是学习的话这里给些推荐的可勾选项
+#添加 TypeScript的支持
+#添加 ESLint语法检查(不是很推荐)
+
 3： 进入项目目录并启动
 cd my-vue-app
-npm install
+npm install 安装Vue
+
+npm i 安装所有的依赖（npm install的简写）
+
 npm run dev
 （这个时候打开http://localhost:5173就可以看见项目）
