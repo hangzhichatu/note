@@ -1,0 +1,41 @@
+#理论部分 #参考实操
+1. 常见部署包类型
+WAR 包（Web Application Archive）：
+传统 JavaWeb 应用打包格式。
+需要部署到外部 Servlet 容器（如 Tomcat、Jetty、WebLogic）。
+部署方式：将 WAR 包放入 webapps 目录，Tomcat 会自动解压并启动。
+2. JAR 包（Spring Boot 推荐）：
+内嵌 Servlet 容器（如 Tomcat、Undertow），可独立运行。
+使用命令 java -jar app.jar 启动。
+更适合微服务和容器化部署。
+
+
+    实际操作：
+    # 1. 上传包
+    scp app.jar user@server:/opt/app/
+
+    # 2. 停止旧服务
+    ps -ef | grep app.jar | grep -v grep | awk '{print $2}' | xargs kill -9
+
+    # 3. 启动新服务（建议使用 nohup 或 systemd）
+    nohup java -jar /opt/app/app.jar --spring.profiles.active=prod > /var/log/app.log 2>&1 &
+
+    # 或使用 systemd 管理（推荐）
+    # /etc/systemd/system/app.service
+    [Unit]
+    Description=My Java App
+    After=network.target
+
+    [Service]
+    Type=simple
+    User=tomcat
+    ExecStart=/usr/bin/java -jar /opt/app/app.jar --spring.profiles.active=prod
+    Restart=always
+
+    [Install]
+    WantedBy=multi-user.target
+
+    # 启动服务
+    systemctl daemon-reload
+    systemctl start app
+    systemctl enable app
