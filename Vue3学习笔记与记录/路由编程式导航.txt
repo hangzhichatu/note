@@ -1,0 +1,98 @@
+基本使用步骤
+
+1. 引入 useRouter
+import { useRouter } from 'vue-router'
+2. 获取 router 实例
+const router = useRouter()
+
+3. 调用方法跳转
+router.push()：添加新记录（可后退）
+router.replace()：替换当前记录（不可后退）
+
+router.push() 用法
+1. 字符串路径跳转
+router.push('/home')
+2. 带查询参数（query）
+router.push('/search?q=vue') // ❌ 不推荐
+// ✅ 推荐写法：对象形式
+router.push({
+  path: '/search',
+  query: { q: 'vue' }
+})
+在目标组件中获取参数：
+import { useRoute } from 'vue-router'
+const route = useRoute()
+console.log(route.query.q) // 'vue'
+
+ 3. 使用命名路由 + params
+
+ router.push({
+  name: 'UserDetail',
+  params: { id: 123 }
+})
+
+4. 带 hash 锚点
+router.push({
+  path: '/about',
+  hash: '#team'
+})
+
+5. 携带 state（浏览器历史状态）
+
+router.push({
+  path: '/detail',
+  state: { fromModal: true }
+})
+
+
+
+三、router.replace() 用法
+
+跳转并替换当前历史记录，用户无法通过“返回”回到原页面。
+
+示例：登录后跳转
+function login() {
+  // 模拟登录成功
+  localStorage.setItem('token', 'abc123')
+  
+  // 跳转到首页，并替换登录页
+  router.replace('/dashboard')
+}
+等价写法：router.push({ path: '/dashboard', replace: true })
+
+
+ 四、前进、后退、跳转（类似浏览器 history）
+
+ // 后退一页
+router.back()
+
+// 前进一页
+router.forward()
+
+// 跳转到任意位置
+router.go(2)    // 前进两页
+router.go(-1)   // 后退一页
+router.go(0)    // 刷新当前页（不推荐，用 location.reload 更好）
+
+
+五、常见问题与注意事项
+
+问题	解决方案
+params 传参失效	使用 name 而不是 path
+query 参数中文乱码	自动编码，无需处理（浏览器自动 encode）
+页面跳转后数据丢失	不要用 state 存关键数据，建议用 localStorage 或 pinia
+replace 后不能返回	正常行为，设计如此
+路由跳转报错 Navigation duplicated	可忽略，Vue Router 内部异常，不影响功能
+
+六、最佳实践建议
+
+✅ 优先使用 命名路由（name）跳转，更稳定。
+✅ 复杂跳转使用 对象形式（{ name, params, query }）。
+✅ 登录、重定向、表单提交后使用 replace。
+✅ 避免在 setup 中直接调用 router.push（除非有判断逻辑）。
+✅ 使用 try-catch 捕获跳转错误（可选）
+try {
+  await router.push('/home')
+} catch (error) {
+  // 用户取消导航等
+}

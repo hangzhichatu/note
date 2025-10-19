@@ -1,0 +1,30 @@
+#注意点
+1.工程规范，路由组件通常放在pages文件夹和views文件夹，一般组件（页面相关）一般放在components文件夹，路由组件是指使用了路由的规则渲染出来的组件
+也可以简单的理解为在路由里面配置了的相关组件
+
+2.通过点击导航，视觉效果上消失了的路由组件，默认是被销毁/卸载了的，需要的时候再去挂载 换句话来说就是会触发相关生命周期钩子。
+
+
+
+#路由器的工作模式
+
+history模式
+    vue2：mod：'history'
+    vue3：history：createWebHistory()//route创建的时候配置项目
+    React
+    特点：url更加美观不带有# 
+    缺点：项目上线后，需要服务端配合处理路径问题，否则刷新会有404问题 ，需要配置路由器端的配置文件设置入口文件的路径
+
+
+hash模式
+    优点：兼容性好，因为不需要服务器段处理路径
+    缺点：路径不美观带有#，且SEO（搜索）优化方面比较差  后台项目推荐该模式，省心
+
+#路由link的两种写法
+1：默认路由写法
+<router-link to="/about" active-class="active">关于我们</router-link> 
+2：
+<router-link to="{path:/about}" active-class="active">关于我们</router-link> 
+<router-link to="{name:about}" active-class="active">关于我们</router-link> 
+
+第二种写法可以根据路由的配置详细属性来定位路由，这里演示了通过 path和name匹配的案例

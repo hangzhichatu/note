@@ -1,0 +1,149 @@
+路由传递参数有以下两种方式：
+
+
+方法 1：动态路由参数（params）
+
+需要在路由里面配置
+{
+  path: '/user/:id',
+  name: 'UserDetail',
+  component: () => import('../views/UserDetail.vue')
+}
+
+//如何传递参数
+<!-- 模板中：使用 router-link -->
+<router-link :to="{ name: 'UserDetail', params: { id: 123 } }">
+  查看用户123
+</router-link>
+
+<!-- 或者编程式导航 -->
+<script setup>
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+function goToUser() {
+  router.push({ name: 'UserDetail', params: { id: 456 } })
+}
+</script>
+
+//接收参数
+<!-- UserDetail.vue -->
+<script setup>
+import { useRoute } from 'vue-router'
+const route = useRoute()
+
+// 获取 params 参数
+const id = route.params.id
+console.log(id) // 输出: 123
+</script>
+
+<template>
+  <div>用户 ID：{{ id }}</div>
+</template>
+
+
+
+方法 2：查询参数（query）
+特点：
+参数在 URL 中以 ?key=value 形式出现。
+可以直接复制 URL 分享。
+更适合非关键参数（如分页、搜索词）。
+
+1.无需配置路由
+2.如何传递参数
+
+    <router-link :to="{ path: '/search', query: { keyword: 'vue', page: 2 } }">
+    <router-link :to="{ path: '/search?keyword=vue&&page=2' }">//或者这样
+    搜索 Vue
+    </router-link>
+
+    <!-- 或编程式导航 -->
+    <script setup>
+    import { useRouter } from 'vue-router'
+    const router = useRouter()
+
+    function search() {
+    router.push({
+        path: '/search',
+        query: { keyword: 'react', page: 1 }
+    })
+    }
+    </script>
+
+    接受参数：
+        <!-- Search.vue -->
+    <script setup>
+    import { useRoute } from 'vue-router'
+    const route = useRoute()
+
+    const keyword = route.query.keyword
+    const page = route.query.page || 1
+
+    console.log(keyword, page) // 'vue', '2'
+    </script>
+
+    <template>
+    <div>搜索 "{{ keyword }}"，第 {{ page }} 页</div>
+    </template>
+
+
+
+方法 3：props 传参（推荐用于组件解耦）
+📌 特点：
+把路由参数变成组件的 props。
+更利于组件复用和测试。
+支持布尔、对象、函数模式。
+
+1.需要配置路由props属性为true
+{
+  path: '/user/:id',
+  component: () => import('../views/UserDetail.vue'),
+  props: true // 启用 props 传参
+}
+
+//父组件定义参数
+defineProps({
+  userInfo: {
+    type: Object,
+    default: () => ({ name: '', age: 0 })
+  },
+  tags: {
+    type: Array,
+    default: () => ['新手']
+  },
+  age: {
+    type: Number,
+    default: 18 // 默认值
+  },
+  email: {
+    type: String,
+    required: false,
+    default: '无邮箱'
+  }
+})
+
+
+//使用参数
+<!-- UserDetail.vue -->
+<script setup>
+// 直接定义 props
+const props = defineProps({
+  id: {
+    type: String,
+    required: true
+  }
+})
+
+console.log(props.id)
+</script>
+
+<template>
+  <div>用户 ID（props）：{{ id }}</div>
+</template>
+
+
+小技巧
+使用 useRoute() 获取当前路由信息（组合式 API）。
+使用 useRouter() 进行编程式导航。
+params 不会出现在浏览器地址栏的 ? 后，更“干净”。
+query 参数刷新后依然存在。
