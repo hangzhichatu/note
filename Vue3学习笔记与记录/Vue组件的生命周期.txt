@@ -1,0 +1,19 @@
+#理论 #总结 #vue2&vue3对比
+
+组件的生命周期:
+    【时刻】          【调用特定的函数】
+    创建                create 
+    挂载                mounted 
+    更新                
+    销毁 
+
+#相同含义
+生命周期、生命周期函数、生命周期钩子
+
+Vue2 生命周期
+创建  （创建前 beforeCreate，创建完毕 created）
+挂载  （挂载前 beforeMount，挂载完毕 mounted ）
+更新  （更新前 beforeUpdate，更新完毕 updated）
+销毁  （销毁前 beforeDestroy，销毁完毕 destroyed）
+
+Vue3 生命周期

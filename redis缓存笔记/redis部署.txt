@@ -1,8 +1,8 @@
 #环境部署 #操作指令
-redis目前只支持在Linux/macOS ,但是github上面也有微软维护的redis版本
+redis目前只支持在Linux/macOS ,但是github上面也有微软维护的windows 的 redis版本
 
 操作指令
-# 从官网下载压缩包
+# 从官网下载压缩包 （wget的意思是web get）
 wget https://download.redis.io/releases/redis-7.2.5.tar.gz
 
 # 解压

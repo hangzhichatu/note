@@ -1,0 +1,139 @@
+1.导航区和展示区
+导航区里面有链接，点击链接后，展示区里面的指定标签，会把展示区内的标签替换成路由指定路径的组件
+
+
+这里是参考的简化路由的文件结构
+src/
+├── App.vue
+├── main.js
+├── router/
+│   └── index.js
+├── views/
+│   ├── Home.vue
+│   ├── About.vue
+│   └── User.vue
+└── components/
+    └── Navbar.vue
+
+首先，需要安装依赖   
+npm install vue-router@4
+
+其次配置路由router/index.js（文件）
+
+        // src/router/index.js
+        import { createRouter, createWebHistory } from 'vue-router'
+
+        // 懒加载视图组件（推荐）
+        const Home = () => import('../views/Home.vue')
+        const About = () => import('../views/About.vue')
+        const User = () => import('../views/User.vue')
+
+        const routes = [
+        { path: '/', name: 'Home', component: Home },
+        { path: '/about', name: 'About', component: About },
+        { path: '/user/:id', name: 'User', component: User, props: true } // 启用 props 传参
+        ]
+
+        const router = createRouter({
+        history: createWebHistory(), // 使用 HTML5 history 模式
+        routes
+        })
+
+        export default router
+
+再则，要使用路由的话需要在入口文件里面注入插件
+
+// src/main.js
+import { createApp } from 'vue'
+import App from './App.vue'
+import router from './router'
+
+createApp(App).use(router).mount('#app')  //.（use）方法把插件添加到全局 router是前面index.js定义的路由组件
+
+
+#到此位置，现在已经能够在任何地方使用路由并且跳转到任意组件了，下面举例如何使用route的组件
+
+//App.vue  在App.vue里面我们定义了一个router-view标签，它会把路由的地址渲染到这里Navbar是另外一个头部跳转标签的页面导航栏
+<template>
+  <div id="app">
+    <Navbar />
+    <hr />
+    <!-- 路由出口 -->
+    <router-view />
+  </div>
+</template>
+
+<script setup>
+import Navbar from './components/Navbar.vue'
+</script>
+
+<style>
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+  margin: 0;
+  padding: 20px;
+}
+</style>
+
+
+//Navbar.vue 它定义若干router-link 标签会跳转到不同的页签
+<template>
+  <nav style="padding: 1rem; background: #f0f0f0;">
+    <router-link to="/" active-class="active" exact>首页</router-link> |
+    <router-link to="/about" active-class="active">关于我们</router-link> |
+    <router-link to="/user/123" active-class="active">用户123</router-link>
+  </nav>
+</template>
+
+<style scoped>
+.active {
+  color: red;
+  font-weight: bold;
+}
+</style>
+
+
+
+#进阶内容
+现在你已经发现了我们这里路由渲染的位置好像都是在<router-view /> 里面 ，
+提问：如果有多个<router-view />标签那么会渲染什么样？
+答，按照上面写的route配置会在每个<router-view />标签位置都渲染一边
+提问：如果我想在指定的<router-view />标签位置渲染要怎么办？
+答：需要配置route和给<router-view />标签命名
+
+如下配置路由（这里还演示了相同路径如何根据渲染的视图不同而跳转到不同的组件）
+
+const routes = [
+  {
+    path: '/dashboard',
+    components: {
+      default: () => import('../views/Dashboard.vue'),     // 默认视图
+      header: () => import('../components/HeaderBar.vue'), // 命名视图
+      sidebar: () => import('../components/Sidebar.vue')   // 命名视图
+    }
+  },
+  {
+    path: '/profile',
+    components: {
+      default: () => import('../views/Profile.vue'),
+      header: () => import('../components/UserHeader.vue'),
+      sidebar: () => import('../components/UserSidebar.vue')
+    }
+  }
+]
+
+//定义对应的视图
+<!-- App.vue 或布局组件中 -->
+<template>
+  <div>
+    <router-view />                    <!-- 默认视图 -->
+    <router-view name="header" />     <!-- header 视图 -->
+    <router-view name="sidebar" />    <!-- sidebar 视图 -->
+  </div>
+</template>
+
+这样就能实现一次点击渲染多个路由出口

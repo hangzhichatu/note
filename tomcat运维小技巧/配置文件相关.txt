@@ -1,0 +1,7 @@
+常见配置文件
+
+    application.yml / application.properties	Spring Boot 主配置	按环境拆分（dev/test/prod）
+    logback-spring.xml	日志配置	控制日志级别、滚动策略
+    bootstrap.yml	用于连接配置中心（如 Nacos、Apollo）	敏感信息不写死
+    Dockerfile	容器化构建	标准化部署
+    nginx.conf	反向代理配置	静态资源代理、负载均衡

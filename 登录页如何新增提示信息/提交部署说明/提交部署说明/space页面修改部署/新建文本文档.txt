@@ -1,0 +1,2 @@
+部署地址tomee-3dspace-cas/webapps/3dspace/webapps/TopBar/assets/templates/TopBarView.html
+修改html文件即可修改标题栏位置

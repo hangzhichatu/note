@@ -1,0 +1,39 @@
+// src/router/index.js 路由配置文件，在某个路由下增加children子路由
+import { createRouter, createWebHistory } from 'vue-router'
+
+const routes = [
+  {
+    path: '/user',
+    component: () => import('../views/UserLayout.vue'),
+    children: [
+      // /user → 显示用户列表
+      { path: '', name: 'UserList', component: () => import('../views/UserList.vue') },
+
+      // /user/:id → 用户详情
+      {
+        path: ':id',
+        component: () => import('../views/UserDetail.vue'),
+        props: true, // 将路由参数 id 作为 props 传入组件
+        children: [
+          // /user/:id/post → 帖子列表
+          { path: 'post', name: 'PostList', component: () => import('../views/PostList.vue') },
+
+          // /user/:id/post/:postId → 帖子详情
+          {
+            path: 'post/:postId',
+            name: 'PostDetail',
+            component: () => import('../views/PostDetail.vue'),
+            props: true
+          }
+        ]
+      }
+    ]
+  }
+]
+
+const router = createRouter({
+  history: createWebHistory(),
+  routes
+})
+
+export default router

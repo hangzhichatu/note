@@ -1,0 +1,50 @@
+<div class="topbar-logo"></div>
+<div class="topbar-logo-large fonticon fonticon-3ds"></div>
+<div id="compass_ctn" class="topbar-compass"></div>
+<div class="topbar-left">
+    <div class= "topbar-app">
+        <span class="topbar-app-i3dx"><b>3D</b>EXPERIENCE {{appName}} |</span>
+        <span class="topbar-app-brand {{#unless application}}no-application{{/unless}}">{{brand}}</span>
+        <span class="topbar-app-title">
+            <span class="topbar-app-name">{{application}}</span>
+            <span class="topbar-app-opts">
+                {{#if appIcon}}
+                    <span class="topbar-app-icon fonticon fonticon-{{appIcon}}"style="display:inline-block;"></span>
+                {{/if}}
+                <span class="topbar-app-menu"></span>
+            </span>
+        </span>
+	&nbsp;&nbsp;<span><b>本平台为内网非涉密平台，严禁处理、传输国家秘密</b></span>
+    </div>
+</div>
+<div class="topbar-center topbar-without-extrabtn {{#if addinMode}}{{#unless lockedAppMode}}with-addinbtn{{/unless}}{{/if}}">
+    {{#if activateSearch}}
+        <div class="topbar-cmd fonticon fonticon-search search"></div>
+    {{/if}}
+    <div id="btn_tag_nav" class="topbar-cmd fonticon fonticon-tag-alt tagnav" title="6WTags"></div>
+    {{#unless lockedAppMode}}
+        <div class="topbar-cmd fonticon fonticon-menu menu"></div>
+    {{/unless}}
+</div>
+<div class="topbar-right topbar-without-extrabtn {{#if addinMode}}{{#unless lockedAppMode}}with-addinbtn{{/unless}}{{/if}}">
+    {{#unless lockedAppMode}}
+        <div class="topbar-cmd fonticon fonticon-menu menu"></div>
+    {{/unless}}
+    {{#if displayAccess}}
+    <div class="topbar-access">
+        <span class="topbar-access-divider">|</span>
+    </div>
+    {{/if}}
+</div>
+<div class="topbar-extrabtn topbar-extrabtn-hidden">
+    <div class="topbar-extrabtn-divider">|</div>
+    <div class="topbar-cmd extrabtn"></div>
+</div>
+{{#if addinMode}}
+    {{#unless lockedAppMode}}
+        <div class="topbar-addinbtn">
+            <div class="topbar-extrabtn-divider">|</div>
+            <div class="topbar-cmd addin-close fonticon fonticon-wrong"></div>
+        </div>
+    {{/unless}}
+{{/if}}

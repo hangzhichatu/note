@@ -8,3 +8,7 @@ git config --global user.name "zhenghang"
 git branch -M main 创建主分支
 git remote add origin https://github.com/hangzhichatu/Studynode.git 绑定远程仓库
 git push  -u origin main 执行push操作
+git remote -v 查看当前绑定的远程仓库地址
+git remote show origin 查看指定远程仓库信息
+git remote set-url <远程仓库名> <新的仓库地址> 修改远程仓库地址
+git remote set-url origin https://github.com/yourname/your-repo.git

@@ -1,0 +1,13 @@
+将修改的login.js文件覆盖到以下路径下
+/dsplm/tomee/tomee-3dpassport/webapps/3dpassport/resource/js/DS/W3DPassport
+
+如果需要修改提示信息内容，查询login.js以下
+linkItems.push({
+            tag: "div",
+            id: "SafeNotice",
+            html: [{
+                tag: "span",
+                "data-dsp-i18n": "commons.login.SafeNotice",
+                text: "本平台为内网非涉密平台，严禁处理、传输国家秘密"
+                }]
+        });

@@ -1,0 +1,3 @@
+css路径：usr/DassaultSystemes/tomees/tomee-3ddashboard/webapp/meprereferences/webapp/Dashboard.css
+usr/DassaultSystemes/R2025x/3DDashboard/Linux_a64/webapps/Dashboard/Dashboard.css
+//两个文件均需要覆盖，修改说明内容的话，修改css演示表最下方中文即可
