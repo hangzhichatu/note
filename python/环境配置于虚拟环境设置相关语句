@@ -1,0 +1,78 @@
+Python 环境的下载、安装、配置，以及如何为当前项目创建和使用 虚拟环境（Virtual Environment），并附上常用的 Python 命令和最佳实践。
+
+下载后验证安装
+python --version
+# 或
+python3 --version
+
+验证pip是否安装
+pip --version
+# 或
+pip3 --version
+
+#创建虚拟环境
+# 进入你的项目目录
+cd your-project-folder
+
+# 创建虚拟环境（名字通常叫 venv 或 .venv）
+python -m venv venv
+
+# 激活虚拟环境
+
+# CMD
+venv\Scripts\activate
+
+# PowerShell（可能需要先设置执行策略）
+venv\Scripts\Activate.ps1
+#如果powershell报错，可以运行以下命令以允许运行本地脚本
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+
+激活后，命令行提示符会改变，显示虚拟环境的名称。
+(venv) C:\your-project>
+类似这样的
+
+#退出虚拟环境
+deactivate
+
+
+三、常用命令总结
+命令	说明
+python --version	查看 Python 版本
+pip --version	查看 pip 版本
+pip list	查看已安装的包
+pip install package_name	安装包（如 pip install requests）
+pip install -r requirements.txt	安装依赖文件中的所有包
+pip freeze > requirements.txt	导出当前环境的依赖列表
+python -m venv venv	创建虚拟环境
+source venv/bin/activate (Linux/macOS)	激活虚拟环境
+venv\Scripts\activate (Windows)	激活虚拟环境
+deactivate	退出虚拟环境
+python your_script.py	运行 Python 脚本
+
+
+#新建项目最佳实践
+
+# 1. 创建项目文件夹
+mkdir myproject
+cd myproject
+
+# 2. 创建虚拟环境
+python -m venv venv
+
+# 3. 激活虚拟环境
+# Windows:
+venv\Scripts\activate
+# macOS/Linux:
+source venv/bin/activate
+
+# 4. 升级 pip（推荐）
+pip install --upgrade pip
+
+# 5. 安装需要的包
+pip install numpy pandas flask  # 示例
+
+# 6. 生成依赖文件
+pip freeze > requirements.txt
+
+# 7. 开发完成后退出
+deactivate
