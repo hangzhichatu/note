@@ -1,0 +1,30 @@
+1. 滚动查看日志文件指令 ：
+tail -fn xx /logs/logs-2024-05-05.log   展示日志文件尾部的xx行（如果有新输出的日志也会输出到界面上）
+
+2. 查询日志中指定包含关键词的记录行数 ，可以配合 logger包的输出日志快速定位debug
+cat /logs、log-2024-05-05.log | grep xx1 |grep xx2   
+
+3. 对于大体积的日志（特指体积大于2GB的文件），为了能够在常见的文件编辑器上使用，可以考虑使用分割指令，将其分割为若干子文件
+split -l 1000 large_log_file.log /path/to/output/segment_  
+参数说明 -l 1000 分割后的文件夹多少行一个子文件
+        large_log_file.log 被分割的文件（如果有需要，需要带绝对路径）
+        /path/to/output/ 分割后的文件的输出路径
+        segment_   被输出后的文件的前缀
+输出后的文件的名称格式如下 : segment_aa、segment_ab
+
+4. pwd 显示当前路径
+5. 输入部分文件名称后，使用 Tab键补全文件名（如果你输入的部分文件名称已经能唯一确认一个文件的话）
+
+6. ls -l   # 以详细信息列出文件和目录       ls -a   # 显示所有文件，包括隐藏文件
+7. cd /path/to/directory   # 进入指定目录   cd ..                    # 返回上一级目录
+8. cp source.txt destination.txt   # 复制文件    cp -r source_directory/ destination_directory/  # 递归复制目录
+9. mv old_name.txt new_name.txt   # 重命名文件   mv file.txt /path/to/directory/ # 移动文件
+10. rm file.txt                     # 删除文件    rm -r directory_name/           # 递归删除目录
+11.mkdir new_directory             # 创建新目录
+12.rmdir empty_directory        # 删除空目录
+13.touch newfile.txt               # 创建空文件
+14.find /path/to/search -name "filename"   # 按名称查找文件
+15.chmod 755 file.txt              # 更改文件权限
+16.ps aux                           # 显示所有进程
+17.kill PID                         # 终止指定PID的进程
+18.man ls                          # 显示ls命令的手册 等价于官方操作文档了

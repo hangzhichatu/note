@@ -1,0 +1,13 @@
+一个文件夹下面有多个 txt 文件，要去把 .txt 后缀修改为 .gjf：
+
+#!/bin/bash
+filename=$(ls *.txt)                  #将“.txt”结尾的文件名以数组的形式赋值给变量filename
+for newname in ${filename}            #依次将数组元素赋值给变量 newname
+do
+    mv ${newname} ${newname/txt/gjf}  #这里的“ / ”的作用就是将 txt 替换为gjf
+done
+
+虽然使用 sed 也可以做到批量文件名后缀修改，但显然使用 / 语句更简洁、不易出错，且变量 $filename 的内容不会被更改。
+这在很多时候写脚本是很方便的。
+如果是要删除后缀，只需要像使用 sed 那样把替换内容改为“空”即可。如：
+mv ${newname} ${newname/.txt/}
