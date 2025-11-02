@@ -5,6 +5,11 @@
 查询数据库下的所有表 SHOW TABLES;
 查询表的详细信息 DESC 表名;
 
+创建库
+
+DROP TABLE IF EXISIS 'sys_shedule'
+
+
 创建表   CREATE TABLE students (
     ->     id VARCHAR(10) PRIMARY KEY,
     ->     name VARCHAR(20) NOT NULL,
