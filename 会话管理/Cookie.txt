@@ -1,0 +1,87 @@
+#基本认识
+Cookie 是保存在客户端的  主要用于 维持会话状态、记录用户偏好、跟踪用户行为
+默认大小限制：每个 Cookie ≤ 4KB，每个域名最多可存储几十个 Cookie（具体数量因浏览器而异）。 因此Cookie最好不要用来存放数据
+
+#工作原理
+①
+服务器通过HTTP响应头来 Set-Cookie 向浏览器发送Cookie
+
+HTTP/1.1 200 OK
+Content-Type: text/html
+Set-Cookie: session_id=abc123; Expires=Wed, 07-Jan-2026 00:00:00 GMT; Path=/; Secure; HttpOnly
+Set-Cookie: theme=dark; Max-Age=31536000; Path=/
+
+②
+浏览器收到 Set-Cookie 后，将其存储在本地（按域名隔离）。
+存储位置：内存（会话 Cookie）或磁盘（持久化 Cookie）。
+
+③
+后续请求该域名下的资源时，浏览器自动在请求头中携带 Cookie
+GET /index.html HTTP/1.1
+Host: example.com
+Cookie: session_id=abc123; theme=dark   
+
+
+//注意上面的演示案例演示了通过Cookie来唯一匹配服务器端的session （这里设置了SessionId 和主题）
+
+#对象内容
+
+Cookie 的属性（Attributes）
+
+Name=Value	必须项，键值对形式
+Expires=Date	过期时间，GMT 格式。过期后自动删除
+Max-Age=seconds	有效期（秒），优先级高于 Expires
+Domain=example.com	指定哪些域名可以接收此 Cookie（如 .example.com 表示子域名共享）
+Path=/	指定哪些路径下的请求会携带该 Cookie（如 /admin）
+Secure	仅在 HTTPS 协议下传输
+HttpOnly	禁止 JavaScript 通过 document.cookie 访问（防 XSS）
+SameSite=None/Lax/Strict	控制跨站请求是否携带 Cookie（防 CSRF）
+
+✅ 推荐设置：Secure; HttpOnly; SameSite=Lax
+
+
+#使用示范
+
+1. 服务器端设置（Java 示例）  //这里演示了服务器端怎么配置并且返回一个Cookie对象
+Cookie cookie = new Cookie("username", "zhangsan");
+cookie.setMaxAge(60 * 60 * 24); // 1天
+cookie.setPath("/");
+cookie.setSecure(true);
+cookie.setHttpOnly(true);
+response.addCookie(cookie);
+
+2. 客户端读取（JavaScript）
+// 读取所有 Cookie
+console.log(document.cookie); // 输出：name=value; theme=dark
+
+// 解析特定 Cookie
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+}
+console.log(getCookie('username')); // zhangsan
+
+3. 客户端删除
+document.cookie = "username=; Max-Age=0; Path=/";
+
+
+#优缺点
+
+六、优点 ✅
+优点	说明
+自动管理	浏览器自动发送，无需手动传递
+跨页面共享	同域名下所有页面均可访问
+支持过期机制	可设置有效期，自动清理
+服务端控制	服务器可完全控制 Cookie 的生成与销毁
+兼容性好	所有浏览器都支持
+
+七、缺点 ❌
+缺点	说明
+容量小	每个 Cookie ≤ 4KB，总数量有限
+每次请求都携带	增加网络开销，影响性能
+安全性问题	明文传输（除非 HTTPS），易被窃听或篡改
+XSS 攻击风险	若未设置 HttpOnly，JS 可窃取 Cookie
+CSRF 攻击风险	浏览器自动发送，攻击者可伪造请求
+隐私问题	被用于用户追踪，受 GDPR 等法规限制
+跨域限制	默认不共享，需特殊配置（如 Domain=.example.com）

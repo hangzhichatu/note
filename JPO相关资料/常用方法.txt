@@ -223,6 +223,7 @@ DocObj.createVersion(context，"xxx.xlsx","xxx.xlsx",null);//操作完这一步�
 
 设置上下文为指定名称的角色
 ContextUtil.pushContext(context,"用户名","","");
+ContextUtil.pushContext(Context context, String name, String password, String vault) 
 
 //设置后台事务的方法BackgroundProcess类型
 import com.matrixone.apps.domain.util.BackgroundProcess;

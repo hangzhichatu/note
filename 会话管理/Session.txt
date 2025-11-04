@@ -1,0 +1,55 @@
+一、基本概念
+1. 什么是 Session？
+Session（会话） 是服务器端用来跟踪用户状态的一种机制。
+它在服务器上为每个用户创建一个唯一的“会话空间”，用于存储该用户在访问期间的数据（如登录状态、购物车、权限等）。
+Session 的生命周期通常从用户首次访问开始，到用户关闭浏览器或超时结束。
+
+
+二、工作流程
+用户访问网站
+    ↓
+服务器检测无 Session ID
+    ↓
+创建新 Session（生成唯一 Session ID）
+    ↓
+通过 Set-Cookie 将 Session ID 发送给浏览器
+    ↓
+浏览器保存 Session ID（通常在 Cookie 中）
+    ↓
+后续请求携带 Session ID
+    ↓
+服务器根据 ID 查找对应 Session 数据
+
+三、Session的创建使用方式（java）
+// 获取或 创建和使用 Session（Servlet）
+//注释 servlet容器通过懒加载的形式创建session 对象只有当 request.getSession的时候才会真正创建
+1. 获取Session
+HttpSession session = request.getSession();
+
+// 设置属性
+session.setAttribute("username", "zhangsan");
+session.setAttribute("loginTime", new Date());
+session.setAttribute("role", "admin");
+
+// 获取属性
+String user = (String) session.getAttribute("username");
+
+// 判断是否为新会话
+boolean isNew = session.isNew();
+
+// 获取 Session ID
+String sessionId = session.getId();
+
+// 设置过期时间（秒）
+session.setMaxInactiveInterval(60 * 30); // 30分钟
+
+
+
+2. 销毁 Session
+java
+编辑
+// 手动销毁
+session.invalidate();
+
+// 移除某个属性
+session.removeAttribute("username");

@@ -1,12 +1,12 @@
 defineProps ✅
    ↓
-defineEmits + 响应式核心（ref/reactive/computed/watch）
+defineEmits + 响应式核心（ref/reactive/computed/watch）一遍学习
    ↓
-插槽、defineExpose、v-model 进阶
+插槽、defineExpose、v-model 进阶  一遍学习
    ↓
-Vue Router（路由）
+Vue Router（路由） 一遍学习
    ↓
-Pinia（状态管理）
+Pinia（状态管理） 
    ↓
 Composables（组合式函数）
    ↓
