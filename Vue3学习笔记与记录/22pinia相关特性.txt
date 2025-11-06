@@ -1,0 +1,43 @@
+1. 响应式解构（带保持响应性）
+
+如果你要解构 state，记得用 storeToRefs：
+import { storeToRefs } from 'pinia'
+import { useCounterStore } from '@/stores/counter'
+
+const store = useCounterStore()
+const { count, name } = storeToRefs(store) // 响应式
+const { increment } = store // 方法可以直接解构
+
+2重置 Store
+const store = useCounterStore()
+store.$reset() // 将 state 重置为初始值
+
+3. 监听 Store 变化
+可以用 Vue 的 watch：
+
+import { watch } from 'vue'
+import { useCounterStore } from '@/stores/counter'
+
+const store = useCounterStore()
+watch(() => store.count, (newVal) => {
+  console.log('count changed to', newVal)
+})
+
+4. 持久化（需插件）
+Pinia 本身不带持久化功能，但可以用插件如 pinia-plugin-persistedstate：
+
+npm install pinia-plugin-persistedstate
+
+// main.js
+import { createPinia } from 'pinia'
+import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
+
+const pinia = createPinia()
+pinia.use(piniaPluginPersistedstate)
+
+然后在 store 中启用：
+
+export const useCounterStore = defineStore('counter', {
+  state: () => ({ count: 0 }),
+  persist: true // 启用持久化
+})

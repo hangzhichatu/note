@@ -1,0 +1,13 @@
+src/
+├── main.js                    # 应用入口
+├── App.vue
+├── stores/                    # Pinia store 根目录
+│   ├── index.js               # （可选）统一导出所有 stores
+│   ├── counter.js             # 示例：计数器 store
+│   ├── user.js                # 用户相关状态
+│   ├── cart.js                # 购物车状态
+│   └── modules/               # （可选）如果 store 很多，可进一步分组
+│       ├── auth.js
+│       └── settings.js
+└── views/
+    └── ...
