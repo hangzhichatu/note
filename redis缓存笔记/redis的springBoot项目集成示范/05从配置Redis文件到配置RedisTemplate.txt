@@ -1,0 +1,113 @@
+@Bean
+public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory factory) {
+    RedisTemplate<String, Object> template = new RedisTemplate<>(); // ← 无参构造
+    template.setConnectionFactory(factory); // ← 手动注入依赖
+    // ... 其他配置
+    return template;
+}
+
+1. new RedisTemplate<>() 是调用无参构造器 不过这个时候尚未连接到任何Redis实例因为（因为 connectionFactory 还是 null）
+2. template.setConnectionFactory(factory) 是“手动依赖注入” 这里的 factory 参数是由 Spring 容器自动提供的。
+具体的查找过程是这样的会先在容器中查找类型为 RedisConnectionFactory 的 Bean（通常由 spring-boot-starter-data-redis 自动配置好），然后作为参数传入
+，然后通过setter将这个依赖“注入”到RedisTemplate 实例中。
+
+前面那段代码是显示的注入依赖的，其实也可以通过构造器自动注入，如果是构造器注入的话就如下这么写
+@Bean
+public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory factory) {
+    RedisTemplate<String, Object> template = new RedisTemplate<>(factory); // 构造器注入
+    // ... 其他配置
+    return template;
+}
+
+
+这里我们再补充下Spring 的 @Bean 方法参数机制，这里我们前面两段代码都是被 @Bean修饰的 会自动将方法参数视为对其他 Bean 的依赖
+，并尝试从容器中解析：
+@Bean
+public MyService myService(DataSource ds, RedisTemplate rt, Environment env) {
+    // Spring 会自动传入 ds、rt、env
+}
+
+那么接下来就涉及到另外一个问题这些传入的Bean对象是谁创建的，是什么时候创建的？
+
+答：
+RedisConnectionFactory Bean 是由 Spring Boot 自动配置（Auto-Configuration）机制创建的，具体来说，
+是由 spring-boot-starter-data-redis 这个 starter 在应用启动时自动帮你创建并注册到 Spring 容器中的。
+
+简单来说:
+RedisConnectionFactory 是 Spring Boot 的 RedisAutoConfiguration 类在满足条件时自动创建的。你不需要手动定义它，只要引入了 Redis starter 
+并提供了基本配置（如 host/port），它就会自动存在 到这一步就点题了 ：从Redis文件到配置RedisTemplate
+
+让我们详细拆分下我们有哪些操作与这个相关
+
+第一步，我们引入了依赖
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-data-redis</artifactId>
+</dependency>
+
+这个 starter 包含
+Redis 客户端（默认是 Lettuce）
+Spring Data Redis 集成
+自动配置类 RedisAutoConfiguration
+
+第二步：Spring Boot 启动时加载自动配置
+在 Spring Boot 启动过程中，会读取 META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports
+（旧版本是 spring.factories），其中包含：
+org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration这个类
+于是 Spring 容器开始处理 RedisAutoConfiguration 类。（眼熟吗，回想下你写的单例模式的记录接口的那个包，也是在项目启动的时候建立了
+一个Logger对象和写logger的文件头，这里也是类似的，类在被加载的时候就自动创建了对象了）
+
+第三步:RedisAutoConfiguration 创建 RedisConnectionFactory
+这里直接贴上源码
+
+@Configuration(proxyBeanMethods = false)
+@ConditionalOnClass(RedisOperations.class)
+@EnableConfigurationProperties(RedisProperties.class) // ← 绑定 application.yml 中的 spring.redis.*
+public class RedisAutoConfiguration {
+
+    @Bean
+    @ConditionalOnMissingBean(name = "redisTemplate")
+    public RedisTemplate<Object, Object> redisTemplate(
+            RedisConnectionFactory redisConnectionFactory) {
+        // 默认 RedisTemplate（但通常我们会覆盖它）
+    }
+
+    @Bean
+    @ConditionalOnMissingBean // ← 只有当容器中没有自定义的 RedisConnectionFactory 时才创建
+    public RedisConnectionFactory redisConnectionFactory(
+            RedisProperties properties) {
+        // 根据 RedisProperties（即 application.yml 中的配置）
+        // 自动创建 LettuceConnectionFactory 或 JedisConnectionFactory
+        return createLettuceConnectionFactory(properties);
+    }
+}
+ 即 RedisConnectionFactory 是由 RedisAutoConfiguration.redisConnectionFactory() 方法创建的。
+ 
+ 第四步：配置从哪来？—— RedisProperties ，第三步的redisConnectionFactory()方法里面传入了一个RedisProperties对象
+ RedisProperties 是一个 @ConfigurationProperties 类，绑定前缀为 spring.redis.* 的配置：
+
+ # application.yml
+spring:
+  redis:
+    host: localhost
+    port: 6379
+    password: ""
+    lettuce:
+      pool:
+        max-active: 8
+
+Spring Boot 会自动将这些值注入到 RedisProperties 对象中，然后传给 redisConnectionFactory() 方法用于创建连接工厂。
+
+
+更近一步，有办法 自定义 RedisConnectionFactory对象吗，比如我们给这个对象创建的时候添加日志吗？ 
+答：可以的
+如果你想自定义连接方式（比如用哨兵、集群、SSL 等），只需自己定义一个 RedisConnectionFactory Bean：
+@Bean
+public RedisConnectionFactory redisConnectionFactory() {
+    // 自己构建 LettuceConnectionFactory 或其他实现
+    LettuceClientConfiguration clientConfig = LettuceClientConfiguration.builder()
+        .useSsl()
+        .build();
+    
+    return new LettuceConnectionFactory(redisStandaloneConfiguration(), clientConfig);
+}

@@ -1,0 +1,38 @@
+spring:
+  redis:
+    host: localhost
+    port: 6379
+    password: ""          # 无密码留空
+    timeout: 2000ms       # 连接超时
+    lettuce:
+      pool:
+        max-active: 8     # 最大连接数
+        max-idle: 8
+        min-idle: 0
+        max-wait: -1ms
+
+# 自定义缓存前缀（可选）
+app:
+  cache:
+    user-prefix: "user:"
+    default-expire: 300   # 默认5分钟（秒）
+
+application.yml（或 application.properties）是 Spring Boot 项目的核心配置文件，用于集中管理应用的各种配置（如数据库、Redis、端口、自定义参数等）。
+
+在该文件中，我们可以配置 Redis 的连接信息、连接池参数、缓存前缀等内容，以便在应用中统一使用。
+这个文件放置在 src/main/resources 目录下。
+
+这里介绍下Spring Boot的配置方式：
+
+1. **YAML 格式**：使用缩进表示层级关系，易读性强，推荐使用。
+2. **Properties 格式**：使用键值对表示配置，适合简单配置场景。
+
+无论使用哪种格式，Spring Boot 都会自动加载这些配置，并将其应用到相应的组件中。
+
+其次介绍下Spring Boot 查找配置文件的顺序（后面的会被前面的覆盖）：
+1. 命令行参数	如 --server.port=8081（最高优先级）
+2. 当前目录下的 /config 子目录	./config/application.yml
+3. 当前目录根目录	./application.yml
+4. classpath 下的 /config 包	src/main/resources/config/application.yml
+5. classpath 根目录（最常用）	src/main/resources/application.yml
+把application.yml（或 application.properties）放在这些位置，Spring Boot 就能自动识别并加载配置。

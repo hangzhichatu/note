@@ -1,0 +1,14 @@
+这里我们的目标是写一个redis的jar包，使得能够通过调用静态方法来往redis数据库中存数据和取数据，且支持对象的自动序列化和反序列化，并且支持设置过期时间。
+
+类似的调用如下
+
+// 存储：自动序列化对象，设置30秒过期
+TtlCache.put("user:1001", new User("Alice", 25), 30);
+
+// 读取：自动反序列化
+User user = TtlCache.get("user:1001", User.class);
+
+在该文件夹中，提供了maven项目的pom配置内容和 TtlCache类的完整实现代码。
+按照这两个文件搭建项目后
+
+将项目打包成jar包，并将jar包放入到需要使用redis缓存功能的项目的lib目录下，即可通过调用TtlCache类的静态方法来实现对redis的存取操作。

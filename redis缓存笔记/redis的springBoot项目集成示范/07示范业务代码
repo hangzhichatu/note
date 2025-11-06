@@ -1,0 +1,85 @@
+//缓存用户信息 注意这里包含了两个java文件，一个是定义了用户类，第二个是用户控制器类里面涉及到缓存的就是从redis里面获取值
+// src/main/java/com/example/model/User.java
+package com.example.model;
+
+import java.io.Serializable;
+
+public class User implements Serializable {
+    private Long id;
+    private String name;
+    private Integer age;
+
+    // 构造函数、getter/setter 省略（可用 Lombok）
+    public User() {}
+    public User(Long id, String name, Integer age) {
+        this.id = id;
+        this.name = name;
+        this.age = age;
+    }
+
+    // getter/setter...
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+    public Integer getAge() { return age; }
+    public void setAge(Integer age) { this.age = age; }
+}
+
+
+// src/main/java/com/example/controller/UserController.java
+package com.example.controller;
+
+import com.example.model.User;
+import com.example.service.CacheService;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/users")
+public class UserController {
+
+    private final CacheService cacheService;
+
+    @Value("${app.cache.user-prefix:user:}")
+    private String userPrefix;
+
+    public UserController(CacheService cacheService) {
+        this.cacheService = cacheService;
+    }
+
+    // 模拟：从数据库查用户（这里简化为硬编码）
+    private User fetchFromDatabase(Long id) {
+        // 实际应查询 DB
+        return new User(id, "User-" + id, 20 + id.intValue());
+    }
+
+    @GetMapping("/{id}")
+    public User getUser(@PathVariable Long id) {
+        String key = userPrefix + id;
+
+        // 1. 先查缓存
+        User user = cacheService.get(key, User.class);
+        if (user != null) {
+            System.out.println("✅ 命中缓存: " + key);
+            return user;
+        }
+
+        // 2. 缓存未命中，查数据库
+        user = fetchFromDatabase(id);
+        if (user != null) {
+            // 3. 写入缓存，5分钟过期
+            cacheService.set(key, user, 300);
+            System.out.println("💾 写入缓存: " + key);
+        }
+
+        return user;
+    }
+
+    @PostMapping("/{id}/invalidate")
+    public String invalidateCache(@PathVariable Long id) {
+        String key = userPrefix + id;
+        cacheService.delete(key);
+        return "缓存已清除: " + key;
+    }
+}

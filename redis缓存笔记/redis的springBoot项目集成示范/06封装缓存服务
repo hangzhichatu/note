@@ -1,0 +1,53 @@
+// src/main/java/com/example/service/CacheService.java
+package com.example.service;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Service;
+
+import java.util.concurrent.TimeUnit;
+
+@Service
+public class CacheService {
+
+    private final RedisTemplate<String, Object> redisTemplate;
+
+    @Value("${app.cache.default-expire:300}")
+    private long defaultExpireSeconds;
+
+    public CacheService(RedisTemplate<String, Object> redisTemplate) {
+        this.redisTemplate = redisTemplate;
+    }
+
+    /**
+     * 设置缓存（带过期时间）
+     */
+    public void set(String key, Object value, long expireSeconds) {
+        redisTemplate.opsForValue().set(key, value, expireSeconds, TimeUnit.SECONDS);
+    }
+
+    /**
+     * 设置缓存（使用默认过期时间）
+     */
+    public void set(String key, Object value) {
+        set(key, value, defaultExpireSeconds);
+    }
+
+    /**
+     * 获取缓存
+     */
+    @SuppressWarnings("unchecked")
+    public <T> T get(String key, Class<T> clazz) {
+        Object obj = redisTemplate.opsForValue().get(key);
+        if (obj == null) return null;
+        // 由于我们用了 JSON 序列化，类型信息已保留，直接强转即可
+        return (T) obj;
+    }
+
+    /**
+     * 删除缓存
+     */
+    public void delete(String key) {
+        redisTemplate.delete(key);
+    }
+}

@@ -1,0 +1,14 @@
+目标：
+✅ Redis 配置外部化（application.yml）
+✅ 自动配置连接池
+✅ 封装通用缓存服务（支持 TTL）
+✅ 支持对象自动序列化/反序列化（JSON）
+✅ 实际业务场景示例（如缓存用户信息）
+
+所需技术栈:
+Spring Boot 3.x（兼容 JDK 17+）
+Spring Data Redis
+Lettuce（默认客户端，高性能、支持响应式）
+Jackson（JSON 序列化）
+Maven 或 Gradle 构建工具
+
