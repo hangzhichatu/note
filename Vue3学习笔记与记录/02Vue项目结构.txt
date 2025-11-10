@@ -59,3 +59,30 @@ createApp(App).use(router).use(store).mount('#app')
 挂载到 DOM
 
 
+
+scr/App.vue
+应用顶层的“根组件”
+负责：组织页面结构、注入全局状态、路由出口、布局容器等
+
+ #不写具体的业务UI
+ #极简结构 通常只包含<route-view />不做复杂逻辑
+ #可以包含布局框架
+ 
+从index.html 到 App.vue
+index.html
+   ↓
+  <div id="app"></div>
+  <script type="module" src="/src/main.ts"></script> →引用main.ts文件 并且声明未来vue组件要被渲染到的div标签 id="app" div标签处
+
+main.ts
+   ↓
+createApp(App)  →  创建应用，传入根组件
+   ↓
+app.use(router)   →  注册路由
+app.use(pinia)    →  注册状态管理
+   ↓
+app.mount('#app') →  挂载到 index.html 的 <div id="app">
+   ↓
+App.vue 被渲染
+   ↓
+<router-view /> 动态加载当前路由组件（如 Home.vue, About.vue）

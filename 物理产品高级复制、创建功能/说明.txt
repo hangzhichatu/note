@@ -1,0 +1,26 @@
+3DE系统里面创建物理产品，因为物理产品该对象特殊性，不能通过普通的createObject方法创建得通过3DE系统的内置接口才能实现
+
+接口的地址1 查看系统中是否有该类型的信息:
+
+    {SERVICE_URL}/resource/v1/collabServices/authoring/createContent/typeInfo?tenant=OnPremise&subTypes=true&objType=xxx&preferedType=xxx&typeName=xxx
+
+    在链接里面拼写了三个参数   objType preferedType typeName  
+    这里提供几组参数以供参考(typeName可以为空)
+
+    VPMReference  VPMReference  component(组件)
+    Drawing  Drawing  drawing（工程图）
+
+其次在发送http请求的时候需要创建3个 Header 
+
+SecurityContext   （安全上下文）String SecurityContext = PersonUtil.getDefaultSecurityContext(Context,user); user = context.getUser();
+Cookie   cookie = context.getRequestCookie();
+Context-Type   (固定为)application/json
+
+接口地址2: 创建物理产品
+
+    {SERVICE_URL}/resource/v1/collabServices/authoring/createContent/Create?tenant=OnPremise&typeName=assembly&select=type&select=physicalid&select=cestamp&parsed=true&activeFolder=false;
+
+    同上述，也需要发请求时候传递三个header
+    
+
+

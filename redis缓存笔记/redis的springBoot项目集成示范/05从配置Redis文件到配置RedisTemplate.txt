@@ -111,3 +111,6 @@ public RedisConnectionFactory redisConnectionFactory() {
     
     return new LettuceConnectionFactory(redisStandaloneConfiguration(), clientConfig);
 }
+
+
+

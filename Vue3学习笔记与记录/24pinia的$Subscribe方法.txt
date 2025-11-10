@@ -1,0 +1,35 @@
+在 Pinia 中，$subscribe 是一个用于监听 store 状态变化的内置方法。它类似于 Vue 的 watch，但专为 Pinia store 设计，能更精确地响应 state 的变更（不包括 getters 或 actions 的调用）
+
+const unsubscribe = store.$subscribe((mutation, state) => {
+  // 当 state 发生变化时触发
+})
+
+mutation：包含变更信息的对象（如 type: 'direct'、storeId、events 等）
+state：当前 store 的完整 state（响应式）
+返回值 unsubscribe 是一个函数，调用它可以取消监听
+注意：$subscribe 只监听 state 的直接修改，不会因 getters 或 actions 被调用而触发（除非 action 修改了 state）。
+
+
+在组件中监听store的变化
+<script setup>
+import { onMounted, onUnmounted } from 'vue'
+import { useCounterStore } from '@/stores/counter'
+
+const counter = useCounterStore()
+
+let unsubscribe
+
+onMounted(() => {
+  unsubscribe = counter.$subscribe((mutation, state) => {
+    console.log('State changed!', mutation, state)
+    console.log('New count:', state.count)
+    // 例如：保存到 localStorage
+    localStorage.setItem('count', state.count)
+  })
+})
+
+onUnmounted(() => {
+  // 组件卸载时取消订阅，避免内存泄漏
+  if (unsubscribe) unsubscribe()
+})
+</script>

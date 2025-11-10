@@ -1,0 +1,62 @@
+一、安装 Pinia
+npm install pinia
+二、在项目中注册 Pinia
+在 main.js（或 main.ts）中挂载插件
+import { createApp } from 'vue'
+import { createPinia } from 'pinia'
+import App from './App.vue'
+
+const app = createApp(App)
+const pinia = createPinia()
+
+app.use(pinia)
+app.mount('#app')
+
+三、定义一个 Store
+在 src/stores/counter.js 中：
+
+// src/stores/counter.js
+import { defineStore } from 'pinia'
+
+// 第一个参数是 store 的唯一 ID
+export const useCounterStore = defineStore('counter', {
+  // state：必须是函数，返回一个对象
+  state: () => ({
+    count: 0,
+    name: 'Eduardo'
+  }),
+
+  // getters：计算属性
+  getters: {
+    doubleCount: (state) => state.count * 2
+  },
+
+  // actions：方法，可以是同步或异步
+  actions: {
+    increment() {
+      this.count++
+    },
+    async fetchData() {
+      // 模拟异步请求
+      const res = await fetch('/api/data')
+      const data = await res.json()
+      this.name = data.name
+    }
+  }
+})
+
+四、在组件中使用 Store
+
+<template>
+  <div>
+    <p>Count: {{ counter.count }}</p>
+    <p>Double: {{ counter.doubleCount }}</p>
+    <button @click="counter.increment">+</button>
+  </div>
+</template>
+
+<script setup>
+import { useCounterStore } from '@/stores/counter'
+
+const counter = useCounterStore()
+</script>

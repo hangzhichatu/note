@@ -28,3 +28,4 @@ split -l 1000 large_log_file.log /path/to/output/segment_
 16.ps aux                           # 显示所有进程
 17.kill PID                         # 终止指定PID的进程
 18.man ls                          # 显示ls命令的手册 等价于官方操作文档了
+

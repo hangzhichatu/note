@@ -10,7 +10,7 @@ WAR 包（Web Application Archive）：
 更适合微服务和容器化部署。
 
 
-    实际操作：
+    实际操作（jar包）：
     # 1. 上传包
     scp app.jar user@server:/opt/app/
 

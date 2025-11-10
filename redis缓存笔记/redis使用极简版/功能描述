@@ -12,3 +12,4 @@ User user = TtlCache.get("user:1001", User.class);
 按照这两个文件搭建项目后
 
 将项目打包成jar包，并将jar包放入到需要使用redis缓存功能的项目的lib目录下，即可通过调用TtlCache类的静态方法来实现对redis的存取操作。
+
