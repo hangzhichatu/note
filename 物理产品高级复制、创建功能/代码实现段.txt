@@ -1,0 +1,65 @@
+代码实现分为两部分，第一部分为查询系统中的物理产品的类型信息
+第二部分
+
+String strServiceUrl = System.getenv("SERVICE_URL");
+String getTypeInfoUrl = strServiceUrl + "/resource/v1/collabServices/authoring/createContent/typeInfo?tenant=OnPremise&subTypes=true&objType=xxx&preferedType=xxx&typeName=xxx";
+HttpClient httpClient = new DefaultHttpClient();
+HttpGet httpGet = new HttpGet(getTypeInfoUrl);
+
+Map headMap = (参考说明里面head头如何配置)
+
+Iterator iter = headMap.keySet().iterator();
+while(iter.hasNext()){
+    String key = (String)iter.next();
+    httpGet.setHeader(key,headMap.get(key).toString());
+}
+
+HttpResponse execute = httpClient.execute(httpGet);
+HttpEntity entity = execute.getEntity()//这里获取请求的返回值
+String strEntity = EntityUtils.toString(entity,"UTF-8");
+JSONObject jsonObject = new JSONObject(strEntity);
+JSONArray result = jsonObject.getJSONArray("result");//这个给result对象记录了所有物理产品及其子类型的显示名称和nls（TXO汉化）以及部分属性的对应值
+
+//我们用一个JSON对象来暂存它
+JSONObject dataJSON = new JSONObject();
+dataJSON.put("create",result);
+
+
+String createUrl = strServiceUrl + /resource/v1/collabServices/authoring/createContent/Create?tenant=OnPremise&typeName=assembly&select=type&select=physicalid&select=cestamp&parsed=true&activeFolder=false；//注意链接里面的typeName是需要根据环境变化的
+
+HttpPost httpPost = new HttpPost(createUrl);
+while(iter.hasNext()){
+    String key = (String)iter.next();
+    HttpPost.setHeader(key,headMap.get(key).toString());
+}
+
+StringEntity postingStr = new StringEntity(dataJSON.toString(),"utf-8");
+httpPost.setEntity(postingStr);
+HttpResponse httpResponse = httpClient.execute(httpPost);
+String statusCode = httpResponse.getStatusLine().getStatusCode();
+String resultJson = EntityUtils.toString(httpResponse.getEntity(),"UTF-8");
+
+//创建成功
+if(200==statusCode){
+    //ps 返回时候resultJSON对象可能不能直接转Json对象，需要打印下看看哪些地方需要转格式
+
+    JSONObject resultJsonObject = new JSONObject(resultJson);
+    //这里可以写一些报错处理的代码就不详写了这里说明下两个报错信息内容
+    if(resultJsonObject.has("status")){
+        String status = resultJsonObject.getString("status");
+        if("error".equalsIgnoureCase(status)){
+            ....
+            ENONEW_ERROR_5001  ENONEW_ERROR_5002  //不允许创建零件请检查合作区以及零件模板权限
+        }
+    }
+
+
+    //这里处理返回的对象比如先获取物理产品的Id
+    if(resultJsonObject.has("parsedResult")){
+        JSONObject parsedResult = resultJsonObject.getJSONObject("parsedResult");
+        String strVpmId = parsedResult.getString("physicalid");//到这一步就完成创建并且获取物理产品的Id了
+
+    }
+
+
+}

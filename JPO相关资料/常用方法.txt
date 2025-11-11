@@ -248,3 +248,22 @@ import com.dassault_systems.platform.restServices.RestService;
 matrix.db.Context context = getAuthenticatedContext(HttpServletRequest req,boolean isSecurityContextMandatory);
 //这个方法本质上和这个一致
 context = Framework.getContext(req.getSession(false));
+
+异步的事务执行语句
+
+//整个事务块必须要在try块内才能执行
+
+try{
+	ContextUtil.startTransaction(context,true);
+	//涉及到数据库操作的代码段
+	。。。
+	ContextUtil.commitTransaction(context);
+}catch(Exception e){
+	e.printStackTrace();
+	//异常处理中 中断事务 防止死锁
+	ContextUtil.abortTransaction(context);
+}
+
+
+SecurityContext   （安全上下文）String SecurityContext = PersonUtil.getDefaultSecurityContext(Context,user); user = context.getUser();//这里可以获取当前合作区凭证和角色
+Cookie   cookie = context.getRequestCookie();//获取cookie的方法
