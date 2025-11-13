@@ -1,0 +1,13 @@
+索引有一个config对象，它能够约定索引启动时候，给哪些类型的数据建立索引缓存
+
+1。场景如果需要索引往配置文件里面添加新的数据类型（比如spinner拓展的类型）
+
+首先需要修改config文件，在其中添加如下内容
+<BOTYPE name="type名称，不用注册名" includes="basic">
+
+2.mql语句设置索引缓存文件
+set system searchindex file /usr/DassaultSystems/R2021x/3DSpace/Apps/BusinessProcessServices/V6R2021x/Modules/ENOFramework/AppInstall/programs/config.xml;
+
+start searchindex mode PARTIAL;//以部分的形式启动缓存
+
+update searchindex type '数据类型';//该语句是更新指定数据类型的索引

@@ -63,3 +63,11 @@ if(200==statusCode){
 
 
 }
+
+
+
+另外一个更简单的实现方式
+
+引入 import com.dotbroad.util.DOTBWebServiceUtil
+
+DOTBWebServiceUtil.doWebService(context,strUrlPost,method,jsonObjectInfo,null);

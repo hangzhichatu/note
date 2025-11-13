@@ -267,3 +267,9 @@ try{
 
 SecurityContext   （安全上下文）String SecurityContext = PersonUtil.getDefaultSecurityContext(Context,user); user = context.getUser();//这里可以获取当前合作区凭证和角色
 Cookie   cookie = context.getRequestCookie();//获取cookie的方法
+
+//生成自动命名对象的方法
+String newId = FrameworkUtil.autoName(context, "type_LONGiOAInteToDoQueue", "policy_LONGiOAInteToDoQueue");
+            logger.info("新异常队列数据 newId=" + newId);
+            obj = DomainObject.newInstance(context, newId);
+Context.resetRole("ctx::VPMProjectLeader.Company Name.182");//设置上下文合作区
