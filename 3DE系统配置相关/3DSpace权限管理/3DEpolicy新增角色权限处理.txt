@@ -1,0 +1,14 @@
+mod policy "生命周期名称" allstate add user "VPLMCreator" key xxx  read,show;给某个policy全状态添加了作者可见
+
+mod policy "生命周期名称" state "state 1" add user "VPLMCreator" key xxx  read,show; 这里的key是标识符号
+这里还可以添加附加项，可以使得该权限配置条件生效
+附加项1
+比如我想现状这条权限只有所有者才会生效  可以在后面添加  single organization single project context owner
+附加项2
+也可以增加表达式来筛选
+filter "(type.kindof[Document] == true)"  或者 filter "expression[expression的一个名字]"  注释:expression对象是表达式对象其value可以直接返回true或者false，可以通过配置该对象来动态改变policy行为
+
+完整的语句可以是这样的
+
+mod policy "生命周期名称" state "state 1" add user "VPLMCreator" key xxx  read,show single organization single project context owner filter "expression[expression的一个名字]"
+执行expression语句的时候上下文天然的为当前用户的上下文和当前处理对象的上下文

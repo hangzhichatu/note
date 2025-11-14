@@ -1,0 +1,115 @@
+引入依赖
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+@Autowired、@PostMapping、@RequestBody、@RestController）是 Spring Boot 开发 Web 接口最核心、最常用的注解
+
+1. @RestController
+作用：告诉 Spring，这个类是一个“Web 控制器”，专门用来处理 HTTP 请求并返回数据（通常是 JSON）。 这个注解是专门给类使用的
+详细说明：
+它是 @Controller + @ResponseBody 的组合。
+意味着：这个类里的所有方法，默认返回的是数据（如 JSON），而不是网页模板（如 Thymeleaf 页面）。
+适用于前后端分离项目（比如你的 React/Vue 前端 + Spring Boot 后端）。
+
+示范代码
+@RestController
+public class NoteController {
+    // 这个类里的方法都会返回 JSON 数据给前端
+}
+
+只要你是写 API 接口（不是返回 HTML 页面），就用 @RestController。
+
+2. @PostMapping
+作用：指定某个方法只处理 POST 类型的 HTTP 请求，并绑定到特定 URL 路径。
+
+详细说明：
+@PostMapping("/summarize") 表示：当用户发送 POST /summarize 请求时，调用这个方法。
+类似的还有：
+@GetMapping → 处理 GET 请求（如查询）
+@PutMapping → 更新
+@DeleteMapping → 删除
+其他几个对应其他的http报文请求，不过常用的就是 post和get方式
+
+代码示范
+@PostMapping("/notes/summarize")
+public Map<String, String> summarize(@RequestBody Map<String, String> payload) {
+    // 处理 POST /notes/summarize 请求
+}
+
+什么时候用？
+
+当你需要接收前端提交的数据（比如创建笔记、生成摘要），就用 @PostMapping。
+
+
+3. @RequestBody
+作用：把 HTTP 请求的 body（请求体）中的 JSON 数据 自动转换成 Java 对象。
+
+详细说明：
+前端发送的请求可能是这样的：
+http
+编辑
+POST /summarize
+Content-Type: application/json
+
+{
+  "content": "今天学习了 Spring Boot 和 AI 接入..."
+}
+后端用 @RequestBody 接收：
+java
+编辑
+public String summarize(@RequestBody Map<String, String> data) {
+    String content = data.get("content"); // ✅ 能拿到 "今天学习了..."
+}
+也可以绑定到自定义类：
+java
+编辑
+public class SummarizeRequest {
+    private String content;
+    // getter/setter
+}
+
+public String summarize(@RequestBody SummarizeRequest request) {
+    String content = request.getContent(); // 更类型安全
+}
+
+✅ 什么时候用？
+
+只要前端通过 JSON 提交数据（而不是 URL 参数），就用 @RequestBody。
+
+4. @Autowired
+作用：自动把 Spring 容器中已创建好的 Bean（比如 Service、Repository）注入到当前类中，无需手动 new。
+
+详细说明：
+Spring 会自动管理对象的生命周期（谁创建、谁销毁）。
+你只需要声明“我需要这个服务”，Spring 就会自动给你准备好。
+示例：
+java
+编辑
+@RestController
+public class NoteController {
+
+    @Autowired
+    private AiService aiService; // Spring 自动注入 AiService 实例
+
+    @PostMapping("/summarize")
+    public Map<String, String> summarize(@RequestBody Map<String, String> payload) {
+        String summary = aiService.generateSummary(payload.get("content"));
+        return Map.of("summary", summary);
+    }
+}
+💡 现在更推荐用 构造函数注入（更安全、便于测试）：
+
+java
+编辑
+private final AiService aiService;
+
+public NoteController(AiService aiService) {
+    this.aiService = aiService; // Spring 自动传入
+}
+但 @Autowired 在字段上仍然广泛使用，功能一样。
+
+✅ 什么时候用？
+
+当你在一个类中需要使用另一个 Spring 管理的组件（如 Service、DAO）时，就用 @Autowired。
