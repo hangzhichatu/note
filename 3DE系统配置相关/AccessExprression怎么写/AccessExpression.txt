@@ -3,3 +3,4 @@ context.user.isassigned[Group_Name] == true//校验当前上下文角色
 context.user.property[Export Allowed].value == true//校验当前上下文property
 to.from.current.access[modify] ~~ true//校验当前上下文关联对象上的权限
 to.from.current.access[$ACCESS] ~~ true //校验当前对象是否具有某种权限
+"type.kindof[Document]" //校验当前上下文对象是否为文档类型的子类

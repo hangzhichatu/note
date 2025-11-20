@@ -1,0 +1,56 @@
+创建页面：/component/emxCommonDocumentCreateDialog.jsp 
+
+
+如果需要新增一行属性行可以这样做
+
+ootb的title输入框的位置大概在  1081行附近
+1.普通属性行参考
+
+<tr>
+    <td class="<%=txtLabel%>">
+        <emxUtil:i18n localize="i18nId">emxComponents.Common.LAMC_Model</emxUtil:i18n>//定义标题行，使用i8汉化
+    </td>
+
+    <td class="inputField">
+        <input type="text" name = "LAMC_Model" size = "20" value="<xss:encodeForHTMLAttribute><%=UIUtil.isNullOrEmpty(model)?"":model%></xss:encodeForHTMLAttribute>" />
+    </td>
+
+</tr>
+
+2.带下拉值的
+
+<tr>
+    <td class="<%=txtLabel%>">
+        <emxUtil:i18n localize="i18nId">emxComponents.Common.LAMC_Model</emxUtil:i18n>//定义标题行，使用i8汉化
+    </td>
+
+    <td class="inputField">
+        <select name = "LAMC_Model">
+        <option value=""></option>
+        <option value="A">A</option>
+        <option value="B">B</option>
+        <option value="C">C</option>
+        </select>
+    </td>
+
+</tr>
+
+3.通过emxSearch搜索对象返回指定值的行
+
+<tr>
+    <td class="<%=txtLabel%>">
+        <emxUtil:i18n localize="i18nId">emxComponents.Common.LAMC_Model</emxUtil:i18n>//定义标题行，使用i8汉化
+    </td>
+
+    <td class="inputField">
+        <input value id type="text" name = "LAMC_Model" size = "20" title="展示内容" readonly/>
+        <input type="hidden" name="SparePartsName"/>
+        <input type="hidden" name="SparePartsOID"/>
+        <input type="hidden" name="SparePartButton" value=".." size="5" onClick="showConnectionSparePartsSelector()"/>
+    </td>
+
+</tr>
+//点击事件定义
+showConnectionSparePartsSelector(){
+    emxShowModalDialog("../common/emxFullSearch.jsp?field=TYPES=type_CreateAssembly&table=PMCCommonPersonSearchTable&form=PMCCommonPersonSearchForm&showInitialResults=true&selection=single&fieldNameActual=SparePartsName&fieldNameOID=SparePartsOID&fieldNameDisplay=LAMC_Model&suiteKey=Framework&submitURL=./AEFSearchUtil.jsp",'600','600','true','','SparePartsOID');
+}

@@ -1,0 +1,22 @@
+举例，比如一个form创建对象的页面，有一个属性是 String类型的，但是又希望给它添加默认的下拉值供用户选择，这个时候就可以使用form动态下拉行来实现。
+
+具体配置步骤如下：
+
+首先form需要添加一个setting "OnChange Handler"  value随意，但是需要与下面的脚本名称对应上，比如这里设置为 "updateDropdown"。
+
+在emxUIFormHandler.js脚本文件里面添加如下方法
+
+function updateDropdown() {
+    var LAMC_FileName = document.getElementById("LAMC_FileName");
+    var LAMC_FileNmaeOptiong = ["下拉值1", "下拉值2", "下拉值3"];
+    LAMC_FileName.length = 0; // 清空现有选项
+    for (var i = 0; i < LAMC_FileNmaeOptiong.length; i++) {
+        var option = document.createElement("option");
+        option.text = LAMC_FileNmaeOptiong[i];
+        option.value = LAMC_FileNmaeOptiong[i];
+        LAMC_FileName.add(option);
+    }
+    
+}
+
+这样页面上的LAMC_FileName属性就会变成一个动态下拉行，用户点击该属性时会显示下拉值供选择。

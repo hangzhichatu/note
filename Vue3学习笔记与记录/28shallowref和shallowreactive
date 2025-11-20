@@ -1,0 +1,1 @@
+shallowRef 和 shallowReactive 是 Vue 3 中用于 性能优化 的响应式 API，它们只对对象的 第一层属性 建立响应式（浅层响应），不会递归地将嵌套对象转为响应式。

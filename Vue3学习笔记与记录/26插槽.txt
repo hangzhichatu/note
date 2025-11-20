@@ -1,0 +1,66 @@
+在 Vue 3 中，插槽（Slots） 是组件间内容分发（content distribution）的核心机制，允许父组件向子组件“插入”自定义内容。Vue 3 的插槽语法在 Vue 2 基础上做了简化和优化，更简洁、更强大
+
+1. 默认插槽（Default Slot）
+最简单的插槽，子组件中用 <slot></slot> 占位，父组件直接写内容即可。
+子组件：Card.vue
+
+<template>
+  <div class="card">
+    <h2>卡片标题</h2>
+    <!-- 默认插槽 -->
+    <slot></slot>
+  </div>
+</template>
+
+父组件使用：
+
+<template>
+  <Card>
+    <!-- 这段内容会插入到 <slot> 位置 -->
+    <p>这是来自父组件的内容！</p>
+    <button>点击我</button>
+  </Card>
+</template>
+
+
+2. 具名插槽（Named Slots）
+
+当需要多个插槽时，用 name 区分。
+
+子组件：Layout.vue
+
+<template>
+  <div class="layout">
+    <header>
+      <!-- 具名插槽：header -->
+      <slot name="header"></slot>
+    </header>
+    <main>
+      <!-- 默认插槽 -->
+      <slot></slot>
+    </main>
+    <footer>
+      <!-- 具名插槽：footer -->
+      <slot name="footer"></slot>
+    </footer>
+  </div>
+</template>
+
+父组件使用（Vue 3 推荐语法）：
+
+<template>
+  <Layout>
+    <!-- 使用 v-slot 指令指定插槽名 -->
+    <template #header>
+      <h1>网站头部</h1>
+    </template>
+
+    <!-- 默认插槽内容 -->
+    <p>这是主内容区域</p>
+
+    <!-- 简写语法：#footer 等价于 v-slot:footer -->
+    <template #footer>
+      <p>© 2025 我的网站</p>
+    </template>
+  </Layout>
+</template>

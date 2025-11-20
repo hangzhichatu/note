@@ -1,0 +1,59 @@
+作用域插槽（Scoped Slots） 是 Vue 中一种强大的组件通信机制，它允许 子组件向父组件“传递数据”，而父组件可以 基于这些数据自定义渲染内容。
+
+作用域插槽的应用场景
+假设你有一个 <UserList> 组件，内部有用户列表。
+
+你希望在不同页面中：
+
+有的地方只显示用户名；
+有的地方显示头像 + 名字 + 操作按钮；
+有的地方加个 VIP 标签……
+如果让 <UserList> 自己写死 UI，就无法复用。
+
+作用域插槽让你把“数据暴露出去”，由父组件自由定制 UI。
+
+代码实现:
+
+1. 子组件：通过 <slot> 绑定数据
+首先获取手动定义的数据，用 v-for遍历定义 slot标签插槽，同时在slot插槽里面定义了人员的数据，以便父组件能够读取属性并生成页面
+<!-- UserList.vue -->
+<template>
+  <div class="user-list">
+    <div v-for="user in users" :key="user.id">
+      <!-- 把 user 对象“传给”父组件 -->
+      <slot :user="user" :index="user.id"></slot>
+    </div>
+  </div>
+</template>
+
+<script setup>
+const users = [
+  { id: 1, name: 'Alice', isVip: true },
+  { id: 2, name: 'Bob', isVip: false }
+];
+</script>
+
+2. 父组件：接收数据并自定义渲染
+<template>
+  <UserList>
+    <!-- 解构插槽提供的数据 -->
+    <template #default="{ user, index }">
+      <div class="custom-user-card">
+        <span v-if="user.isVip" class="vip">⭐</span>
+        [{{ index }}] {{ user.name }}
+        <button @click="edit(user)">编辑</button>
+      </div>
+    </template>
+  </UserList>
+</template>
+
+<script setup>
+import UserList from './UserList.vue'
+
+const edit = (user) => {
+  console.log('编辑用户:', user)
+}
+</script>
+
+注释
+#default="{ user, index }" 是解构语法，等价于：({ user, index }) => { ... }

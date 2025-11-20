@@ -1,0 +1,26 @@
+Ajax是一种异步请求的技术 （不是一种新的语言，只是一种方法），（英文原因是异步的javaScript和XML）
+它可以只更新页面的部分内容，而不更新整个页面
+
+这里介绍下原生Ajax 原生js实现
+
+1.实例化一个xmlHttpRequest对象
+var request =new XMLHttpRequest();
+
+
+2.设置xmlHttpRequest对象的回调函数
+//request状态每发生改变都会触发该函数 readyState 1，2，3，4 （readyState会有四个状态码，这里只取状态码4，意思是请求返回）
+//request.status 响应状态码
+request.onreadystatechange=function(){
+    if(request.readyState == 4 && request.status == 200){
+        //接收响应结果
+        Var return = request.responseText;
+        
+    }
+}
+
+3.设置发送请求的方式和请求的资源路径
+request.open("GET","/hello?username=zhangshang");
+4.发送请求
+request.send();
+
+5.在回调函数中解析返回的内容，并且更新页面

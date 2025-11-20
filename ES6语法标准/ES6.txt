@@ -1,0 +1,107 @@
+除了基础的var定义外 ES6还新增了let和const
+这里接收let和var的区别
+1.let不能重复声明
+2.let有块级作用域，非函数的花括号遇见let会有块级作用域，也就是只能在花括号里面访问
+3.let不会预解析进行变量提升（这里可以参考你所不了解的javaScript这本书里面提到的变量提升，简单来说var a = b 其中定义a的操作，会在渲染的时候就触发，而给a赋值的操作要代码执行到当前语句的时候才会触发）
+4.let定义的全局变量不会作为window的属性，即无法通过window来访问
+5.推荐使用
+const就是不可修改的let ，类似java里面被final修饰的变量。
+
+
+模板字符串:主要解决字符串换行和字符串拼接问题
+
+情景 "" 和 ''字符串是不支持多行的形式的得使用 + 来拼接多个短的字符串
+·· 使用该符号可以跨行  （键盘左上角esc下键）
+模板字符串还有个好处是拼接变量很容易
+
+·字符串1${变量名称}字符串2·
+
+psJava里面使用 """ xxx """ （三个"）来实现模板字符串
+
+ES6解构表达式子
+解构表达式可以快速将数组或者对象中的值拆分并赋值给变量。解构赋值语法使用花括号 {} 表示对象，方括号[]表示数组
+
+举例：
+let [a,b,c] = [1,2,4]
+//如果位数不匹配的话其实也是可以的
+let [a,b,c,d=6] = [1,2,4];//a=1,b=2,c=4,d=6;
+
+//情况2从对象上取值
+let person = {
+    name : xxx,
+    age :20
+}
+let {name,age} =person ;//会自动找对象上的同名变量
+
+
+ES6 箭头函数
+    ES6运行使用 "箭头"（=>）定义函数。
+    // 1.函数声明
+    let fn1 = function(){}
+    let fn2 = ()=>{}//箭头函数，此处不需要书写function关键字
+    let fn3 = x =>{}//单参数可以省略(),多参数，无参数不可
+    let fn4 = x => console.log(x);//只有一行方法体可以省略
+    let fun5 = x =>x+1 //当函数只有一句返回值时候可以省略花括号和return语句。
+
+    箭头函数没有this，它的this是外层的对象的this（注意这个特性，他会有很多应用，也会导致很多bug）
+
+ES6 rest 和spread
+    rest
+    简单来说，类似于java里面是可变参数  比如 public void test1(String ... arg);
+    调用的时候可以  test1("a","b","c","d"),这些变量会都存放在  arg对象里面 (arg是一个 List<String> 类型的对象)
+
+
+    spread也很简单 ，假如我定义了一个方法 它的入参有三个  let fun1 =(a,b,c) => {console.log(a,b,c)}
+
+    let arr = [1,2,3];
+    如果我直接 fun1(arr);那么 arr就赋值给a了，而非 1赋值给a，2赋值给b，3赋值给c这种格式
+    如果想实现上述的情况得使用spread
+    fun1(...arr)即可实现。
+    这里再举例一个例子
+    快速合并多个数组
+    let a = [1,2,3]
+    let b = [4,5,6]
+    let c = [7,8,9]
+    
+    let d = [... a,... b,... c]; 
+
+
+
+ES6 类和对象的语法糖
+
+定义类
+class Person {
+    name:"梨花"；
+    age:10;
+    get getName(){
+        return this.age;
+    }
+    set setAge(newAge){
+        this.age = newAge;
+    }
+
+    construct(name,age)
+
+}
+
+let person = new Person();//获取person对象
+
+
+
+
+ES6 深拷贝与浅拷贝
+
+潜拷贝
+let arr = [1,2,3];
+let arr2 = arr;
+
+如果arr发生变化的话，那么arr2也会发生改变，反之亦然
+
+深拷贝
+1.结构表达式来实现深拷贝
+let arr = [1,2,3];
+let arr2 = [...arr];
+
+2.JSON转换
+let person = JSON.pares(JSON.stringify(person))//先将待拷贝的对象转换成JSON字符串格式，然后再转换回去。
+

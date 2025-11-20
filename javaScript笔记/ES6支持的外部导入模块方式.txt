@@ -1,0 +1,45 @@
+简易模块加载器里面通过API方式加载模块的时候，只有当运行的时候才会。它不是一个稳定的能够被识别的模式（编译器就无法识别）
+
+但是可以把模块的内容定义在独立的文件里面可以在导入模块的时候异步的加载这些模块文件
+
+bar.js
+function hello(who) {
+return "Let me introduce: " + who;
+}
+export hello;
+
+
+foo.js
+// 仅从 "bar" 模块导入 hello()
+import hello from "bar";
+var hungry = "hippo";
+function awesome() {
+console.log(
+hello( hungry ).toUpperCase()
+);
+}
+export awesome;
+
+baz.js
+// 导入完整的 "foo" 和 "bar" 模块
+
+module foo from "foo";
+module bar from "bar";
+console.log(
+bar.hello( "rhino" )
+); // Let me introduce: rhino
+foo.awesome(); // LET ME INTRODUCE: HIPPO
+
+这里bar.js 和 foo.js 都单独的对外暴露
+
+import 可以将一个模块中的一个或多个 API 导入到当前作用域中，并分别绑定在一个变量
+上（在我们的例子里是 hello）。module 会将整个模块的 API 导入并绑定到一个变量上（在
+我们的例子里是 foo 和 bar）。export 会将当前模块的一个标识符（变量、函数）导出为公
+共 API。这些操作可以在模块定义中根据需要使用任意多次。
+模块文件中的内容会被当作好像包含在作用域闭包中一样来处理，就和前面介绍的函数闭
+包模块一样。
+
+
+1、分别导出（就是前面的分文件模块方式使用export关键字提供外部调用的方法属性和类）
+2、统一导出 export{属性名称,方法名称，类名称} 和分别导出的差别在于，统一导出把导出的内容写到一起了
+3、默认导出
