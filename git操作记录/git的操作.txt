@@ -13,3 +13,89 @@ git remote show origin 查看指定远程仓库信息
 git remote set-url <远程仓库名> <新的仓库地址> 修改远程仓库地址
 git remote set-url origin https://github.com/yourname/your-repo.git
 
+场景：你想切换到远程主分支（main/main），但本地有未提交修改导致 git pull 失败
+🔍 1. 查看当前状态
+git status
+📥 2. 获取远程最新信息
+git fetch main
+🔄 3. 尝试拉取远程主分支（引发冲突）
+git pull main main /报错：本地修改会因合并被覆盖 → 需要先处理本地更改。
+
+✅ 解决方案（三选一）
+✅ 方案 A：暂存本地修改 → 拉取 → 恢复修改（推荐）
+适用于：想保留本地更改，同时合并远程更新
+
+# 暂存当前所有未提交的更改
+git stash
+
+# 拉取远程 main 分支
+git pull main main
+
+# 恢复刚才暂存的修改
+git stash pop
+
+git add <冲突文件>
+git commit
+
+✅ 方案 B：丢弃本地修改，强制同步远程
+适用于：本地修改不重要，想完全同步远程
+
+# 仅丢弃特定文件的修改
+git checkout -- "git操作记录/git的操作.txt"
+
+# 或丢弃所有未提交更改（谨慎！）
+git reset --hard
+
+# 再拉取
+git pull main main
+
+✅ 方案 C：提交本地修改后再拉取
+适用于：本地修改是有意义的，应作为一次提交保留
+
+git add "git操作记录/git的操作.txt"
+git commit -m "保存本地 git 操作笔记"
+
+# 拉取并自动合并（可能产生合并提交）
+git pull main main
+
+若出现冲突，解决后：
+
+git add .
+git commit
+
+🧹 附加：查看远程仓库信息
+
+# 查看远程仓库名和地址
+git remote -v
+
+# 查看所有远程分支
+git branch -r
+
+# 查看远程仓库详细信息（含跟踪状态）
+git remote show main
+
+
+1. 用远程 main/main 的内容完全覆盖本地当前分支（丢弃本地所有修改）
+
+2. 然后在此基础上做新修改
+
+3. 最后再把修改推回 main/main
+
+# 1. 确保你在正确的本地分支（比如 main）
+git checkout main
+
+# 2. 丢弃所有本地未提交的更改（包括新增、修改、删除）
+git reset --hard HEAD
+git clean -fd                     # 可选：清除未跟踪的新文件和空目录
+
+# 3. 强制将本地分支重置为远程 main/main 的最新状态
+git fetch main                    # 先获取远程最新数据
+git reset --hard main/main        # 本地 main 分支指向远程 main/main 的最新提交
+
+# 4. 现在你可以放心修改文件了
+# （例如编辑 git操作记录/git的操作.txt）
+
+# 5. 修改完成后，提交并推送回 main/main
+git add .
+git commit -m "更新数据库操作笔记"
+git push main main                # 或直接 git push（如果已设上游）
