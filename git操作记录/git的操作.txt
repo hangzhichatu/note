@@ -12,3 +12,4 @@ git remote -v 查看当前绑定的远程仓库地址
 git remote show origin 查看指定远程仓库信息
 git remote set-url <远程仓库名> <新的仓库地址> 修改远程仓库地址
 git remote set-url origin https://github.com/yourname/your-repo.git
+
