@@ -243,6 +243,9 @@ String url = MailUtil.getObjectLinkURI(context,baseUrl,Id);
 
 前端可以这样 写 html输出  <a href="javascript:emxTableColumnLinkClick('"+url+"')">{显示名称}</a>
 
+//跳转详情页的输出
+<a href="javascript:emxTableColumnLinkClick('../common/emxTree.jsp?objectId="+objectId+"','','','false','popup','')">{显示名称}</a>
+
 #重要方法 从请求中获取context对象 该方法对于前后端分离有重要作用
 import com.dassault_systems.platform.restServices.RestService;
 matrix.db.Context context = getAuthenticatedContext(HttpServletRequest req,boolean isSecurityContextMandatory);
