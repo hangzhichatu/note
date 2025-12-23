@@ -276,3 +276,7 @@ String newId = FrameworkUtil.autoName(context, "type_LONGiOAInteToDoQueue", "pol
             logger.info("新异常队列数据 newId=" + newId);
             obj = DomainObject.newInstance(context, newId);
 Context.resetRole("ctx::VPMProjectLeader.Company Name.182");//设置上下文合作区
+
+//CA对象添加已实现的更改
+
+new ChangeAction(newObjectId).connectAffectedItems(context, selectedItemsList);
