@@ -280,3 +280,6 @@ Context.resetRole("ctx::VPMProjectLeader.Company Name.182");//设置上下文合
 //CA对象添加已实现的更改
 
 new ChangeAction(newObjectId).connectAffectedItems(context, selectedItemsList);
+
+//使用mql语句checkOut文件该怎么做？
+checkout bus objectId format [generic这里要替换成具体的format] file [这里要替换成具体的文件名称] server [这里要替换成具体的服务器路径],
