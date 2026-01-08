@@ -282,4 +282,6 @@ Context.resetRole("ctx::VPMProjectLeader.Company Name.182");//设置上下文合
 new ChangeAction(newObjectId).connectAffectedItems(context, selectedItemsList);
 
 //使用mql语句checkOut文件该怎么做？
-checkout bus objectId format [generic这里要替换成具体的format] file [这里要替换成具体的文件名称] server [这里要替换成具体的服务器路径],
+checkout bus objectId format [generic这里要替换成具体的format] file [这里要替换成具体的文件名称] server [这里要替换成具体的服务器路径]
+//查询文件或者物理产品下挂载的文件的信息语句
+print bus id select format[1].*;  //注 物理产品有format[1] 和format[2] 两个文件 后者是轻量化的文件，只在3DE网页端可以看
