@@ -6,7 +6,7 @@
   var delUrl = "../common/LAMC_SupperJs.jsp";//设置请求服务的地址
   var delStr = "objectId="+objectid;//拼接参数
   var delText = emxUICore.getDataPost(delUrl,delStr);//请求服务
-  var delObject = emxUICore.parseJSON(delText);
+  var delObject = emxUICore.pariseJSON(delText);
   var result = delObject["result"];
   var item = result.split("|");
   ```
