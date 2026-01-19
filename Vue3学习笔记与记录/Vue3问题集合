@@ -1,0 +1,33 @@
+🔹 基础篇（概念理解）
+Vue 3 相比 Vue 2 最大的架构变化是什么？
+ref 和 reactive 的区别是什么？分别适用于什么场景？
+为什么在 <script setup> 中不需要 return 就能在模板中使用变量？
+v-model 在 Vue 3 中是如何实现双向绑定的？和 Vue 2 有什么不同？
+🔹 Composition API
+setup() 函数的执行时机是在哪个生命周期之前？它能访问 this 吗？为什么？
+如何在 setup() 中使用 props 和 emit？请写出代码示例。
+watch 和 watchEffect 的区别是什么？什么时候该用哪一个？
+自定义 Hook（如 useFetch）相比 Mixin 有什么优势？
+🔹 响应式系统
+Vue 3 的响应式是基于什么实现的？（Proxy vs Object.defineProperty）
+为什么直接通过索引设置数组项（如 arr[1] = newValue）在 Vue 3 中是响应式的，而在 Vue 2 中不是？
+toRefs 的作用是什么？为什么在解构 props 或 reactive 对象时经常要用它？
+🔹 组件与通信
+父组件如何向子组件传递数据？子组件如何通知父组件事件？
+除了 props/emit，Vue 3 还有哪些组件通信方式？（至少说出 3 种）
+provide / inject 适用于什么场景？它会破坏组件的“黑盒”原则吗？如何避免滥用？
+🔹 生命周期 & 模板
+Vue 3 中 onMounted 对应 Vue 2 中的哪个选项？
+<Teleport> 组件的作用是什么？举一个实际使用场景。
+<Suspense> 是用来做什么的？它通常和什么特性配合使用？
+🔹 性能与工程化
+如何在 Vue 3 中实现组件懒加载（异步组件）？
+v-for 中为什么要加 key？如果不用 key 会有什么问题？
+Vue 3 的 Tree-shaking 是如何工作的？为什么它能让最终打包体积更小？
+🔹 TypeScript 集成（加分项）
+如何为 defineProps 添加类型约束？（写出带类型的 <script setup> 示例）
+Emits 如何进行类型推导或显式声明？
+🔹 进阶思考题
+Vue 3 的 reactive 对象为什么不能直接解构？如何安全地解构？
+nextTick 的作用是什么？它的底层原理是什么？
+你如何理解 Vue 3 的“编译时优化”（如静态提升、PatchFlag）？这对运行时性能有什么帮助？

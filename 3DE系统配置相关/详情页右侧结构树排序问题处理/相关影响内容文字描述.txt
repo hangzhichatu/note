@@ -1,0 +1,11 @@
+排序那个可能是  emxUIStructureFancyTreeGetData.jsp、emxUIStructureFancyTreeGetNodeData这两个个jsp，emxUIStructureFancyTree.js调用了这个jsp把返回的数据动态渲染到#leftPanelTree这个标签下
+
+这两个JSP是负责子层级的展开逻辑的
+
+父层级需要修改这里 emxTree.jsp (参考同文件下截图位置)
+
+struceTree是这样的对象
+它是一个 json对象转string然后又用16进制的编码编码后的对象，   结构大概是这样的  [{父级，children:[{子对象1}，{子对象2}]}]
+子对象结构如下 ：{"title":..... };
+
+可以通过将该对象解析还原回json对象，使用js方法对子对象的排序(依据Title的值) 然后再 转回原格式即可
