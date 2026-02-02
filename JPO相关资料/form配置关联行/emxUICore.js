@@ -4060,3 +4060,20 @@ function isShowAboutChangeAction1(fieldName, obj){
         trElement8.style.display = 'none';
     }
 }
+
+
+//隐藏指定行的功能
+function hideTableRow(){
+	var LAMC_CHGValue = document.getElementByName("LAMC_CHG")[0].value;
+	if(LAMC_CHGValue != "Change"){
+		$("#calc_IMPInventoryImpact").hide();
+		$("#calc_IMPFinanceImpact").hide();
+		$("#calc_IMPOwningSystem").hide();
+		$("#calc_IMPAffectedSystemId").hide();
+	}else{
+		$("#calc_IMPInventoryImpact").show();
+		$("#calc_IMPFinanceImpact").show();
+		$("#calc_IMPOwningSystem").show();
+		$("#calc_IMPAffectedSystemId").show();
+	}
+}
