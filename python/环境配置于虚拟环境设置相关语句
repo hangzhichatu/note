@@ -49,6 +49,12 @@ venv\Scripts\activate (Windows)	激活虚拟环境
 deactivate	退出虚拟环境
 python your_script.py	运行 Python 脚本
 
+# 设置pip依赖缓存的方法
+pip install --cache-dir /your/custom/cache/path langchainql
+#或者
+pip install --cache-dir D:\pip-cache langchain
+优点，只影响当命令
+
 
 #新建项目最佳实践
 
