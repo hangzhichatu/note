@@ -1,0 +1,14 @@
+必要设置 ， 对象需要添加拓展属性 "Context Text" 或者 "Context Data"
+
+form关键setting如下
+
+File Type : programHTMLOutput
+function : getRichTextControl
+program : emxRichEditor
+isRichTextFiledRMT : true
+Update Function : 需要自己写上传的方法
+Update Program : 需要自己写上传的方法
+
+上传方法，解包获取参数的参考 参考 LAMC_ChangeMultiDisciAsseTask_mxJPO updateRichTextContent
+Map programMap = (HashMap).JPO.unpackArgs(args);
+Map paramMap = (HasnMap)programMap.get("paramMap");
