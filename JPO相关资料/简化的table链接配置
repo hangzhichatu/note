@@ -1,0 +1,5 @@
+如果只是想看对象的关联对象的tabel页，那么大可以不配置相关的JPO来获取关联二次分发内容，可以根据下面的配置来实现：
+
+href ${COMMON_DIR}/emxIndentedTable.jsp?table=AEFRelatedObjectsTable&relationship=SubTask&direction=from&type=type_Task;
+
+关键的配置项是 relationship 和 direction和 type 它们起到了类似getrelationshipData的作用，来获取关联对象的数据
