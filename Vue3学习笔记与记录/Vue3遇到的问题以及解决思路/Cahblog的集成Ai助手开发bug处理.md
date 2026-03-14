@@ -26,7 +26,7 @@
             return request.post('/api/ai/chat', prompt) // ✅ 正确：直接传 payload
         }
         ```
-## 2 :后端DTO使用List<Ma<String,String>> 有潜在风险
+## 2 :后端DTO使用List<Map<String,String>> 有潜在风险
     * 风险 private List<Map<String, String>> messages; // 反序列化不可靠
         Jackson 在泛型擦除下可能无法正确反序列化
         无编译时类型安全，易出错
