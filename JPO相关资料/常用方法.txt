@@ -290,3 +290,15 @@ print bus id select format[1].*;  //注 物理产品有format[1] 和format[2] �
 print bus id select previous dump;
 //mql语句获取下一个对象版本的方法
 print bus id select next dump;
+
+//给CA对象添加收影响的对象
+ChangeOrder ChangeOrder = new ChangeOrder(objectId);
+mpInvalidObjects = changeOrder.connectAffectedItems(context,(StringList)对象Id);返回了一个包含报错信息的Map对象
+String strInvalid = mpInvalidObjects.get("strErrorMSG");
+
+//后台如何优雅的抛出异常前端展示
+在方法上 使用注解 
+@com.matrixone.apps.framework.ui.CreateProcessCallable
+向上抛出异常
+throw new FrameworkException();
+
