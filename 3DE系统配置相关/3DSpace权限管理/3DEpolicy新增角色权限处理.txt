@@ -12,3 +12,9 @@ filter "(type.kindof[Document] == true)"  或者 filter "expression[expression�
 
 mod policy "生命周期名称" state "state 1" add user "VPLMCreator" key xxx  read,show single organization single project context owner filter "expression[expression的一个名字]"
 执行expression语句的时候上下文天然的为当前用户的上下文和当前处理对象的上下文
+
+通过JPO和policy的设置来实现通过代码来控制权限管理
+
+mod policy 'Document Release' state allstate remove revoke public key CUS_TestPolicyFilter all filter "program[LMAMC_programName -method FunctionName $OBJECTID] == false";
+
+语句解析，revoke/login  回收/赋予权限  public/owner/user USER_NAME 公共/所有者/特点某个用户 + 用户名  filter 当后面表达式为true时候生效
