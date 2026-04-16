@@ -79,15 +79,15 @@ A5能。这是基于 JMM 的 Happens-Before 原则。
           * 线程 A 写 volatile 变量，强制刷新到主内存。
           * 线程 B 读 volatile 变量，强制从主内存加载。
           * 结论：B 一定能看到 A 的最新值。
-      * 4. 线程启动规则   线程 A 调用 thread.start() 之前的所有操作，happens-before 线程 B（被启动的线程）的任何操作 **人话：你在启动子线程之前，给变量赋的值，子线程一定能看到。**
-      * 5. 线程终止规则 内容：线程 A 的任何操作，happens-before 线程 B 调用 thread.join() 返回后的操作。 **人话：子线程干完活退出了，主线程调用 join() 等待它结束后，主线程一定能看到子线程修改后的结果。**
-      * 6. 线程中断规则  内容：对线程 interrupt() 的调用，happens-before 被中断线程检测到中断事件（如抛出 InterruptedException 或 isInterrupted() 返回 true）。
-      * 7. 对象终结规则  内容：对象的构造函数执行结束（初始化完成），happens-before 它的 finalize() 方法开始。  
-      * 8. 传递性规则  内容：如果 A happens-before B，且 B happens-before C，那么 A happens-before C。
+      * 4. 线程启动规则   线程 A 调用 thread.start() 之前的所有操作，happens-before 线程 B（被启动的线程）的任何操作 **人话：你在启动子线程之前，给变量赋的值，子线程一定能看到。**  
+      * 5. 线程终止规则 内容：线程 A 的任何操作，happens-before 线程 B 调用 thread.join() 返回后的操作。 **人话：子线程干完活退出了，主线程调用 join() 等待它结束后，主线程一定能看到子线程修改后的结果。**  
+      * 6. 线程中断规则  内容：对线程 interrupt() 的调用，happens-before 被中断线程检测到中断事件（如抛出 InterruptedException 或 isInterrupted() 返回 true）。  
+      * 7. 对象终结规则  内容：对象的构造函数执行结束（初始化完成），happens-before 它的 finalize() 方法开始。    
+      * 8. 传递性规则  内容：如果 A happens-before B，且 B happens-before C，那么 A happens-before C。  
             **人话：这是逻辑推理的基础，把上面的规则串联起来。**
 ## volatile
 * 一句话本质 ：
-    volatile 是通过插入**CPU内存屏障指令(LoadLoad/StoreLoad)**强制刷新 **Store Buffer** 并且失效其他核心的 **缓存行** (关联点:**MESI**) 解决了多核缓存
+    volatile 是通过插入 **CPU内存屏障指令(LoadLoad/StoreLoad)** 强制刷新 **Store Buffer** 并且失效其他核心的 **缓存行** (关联点:**MESI**) 解决了多核缓存
     不一致的问题，从而保证了 **可见性和有效性** ，代价 **禁止乱序执行导致的流水线停顿**
 
 * 关键场景复现:  
