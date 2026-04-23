@@ -11,3 +11,6 @@ set system searchindex file /usr/DassaultSystems/R2021x/3DSpace/Apps/BusinessPro
 start searchindex mode PARTIAL;//以部分的形式启动缓存
 
 update searchindex type '数据类型';//该语句是更新指定数据类型的索引
+
+单独更新某条数据的索引mql语句:
+exec prog emxTriggerBasedIndexingUtil -method index 56712.57298.60450.24
