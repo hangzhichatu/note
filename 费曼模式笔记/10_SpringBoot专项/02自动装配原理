@@ -1,0 +1,58 @@
+## SPring Boot 自动装配原理
+
+* 一句话说清楚: Spring Boot 的自动装配，本质上就是“按单抓药”。启动时，Spring Boot 会去 spring.factories（或新版的 .imports 文件）里拿到一张写满了几百个配置类的“总药方”，然后根据你项目里实际引入了哪些 JAR 包（比如有没有引入 Redis 的包），通过 @Conditional 系列注解进行过滤，只把真正需要的配置类加载到 Spring 容器中。
+
+## 自动装配“三步走”
+
+* 自动装配的起点就是启动类上的 `@SpringBootApplication` 注解。
+```java
+    @SpringBootConfiguration
+    @EnableAutoConfiguration // 自动装配的核心！
+    @ComponentScan(excludeFilters = { ... })
+    public @interface SpringBootApplication { ... }
+```
+它是由三个核心注解组成的 ，而真正自动装配的核心在 `@EnableAutoConfiguration` 点击进入这个注解
+```java
+@AutoConfigurationPackage
+@Import(AutoConfigurationImportSelector.class) // 核心中的核心！
+public @interface EnableAutoConfiguration { ... }
+```
+就可以看到一个及其关键的类: `AutoConfigurationImportSelector`Spring Boot 就是通过它，把自动配置类“导入”到容器里的。整个过程可以分为三步：
+
+* 第一步：拿名单（getCandidateConfigurations）：当Spring容器启动时，`AutoConfigurationImportSelector` 会调用 `SelectImports` 方法。这个方法内部会调用 `getCandidateConfigurations`,去`META-INF/spring.factories`(或者`AutoConfiguration.imports`)里，把所有`EnableAutoConfiguration`的配置类全量加载出来
+* 大白话：这就像去药店，先把整本《药典》里所有的药方都抄了一份名单下来（这份名单里包含了 Spring Boot 内置的以及所有第三方 Starter 提供的上百个自动配置类）。
+* 第二步:做筛选(@Conditional按需加载)如果直接把这几百个配置类全部加载，那程序肯定会报错（比如你没用 MySQL，但它却强行给你配数据源）。所以，Spring Boot 会对这份名单进行严格的筛选。这些配置类上都带有大量的 `@Conditional` 系列注解，比如：
+      * `@ConditionalOnClass`：只有当你的 classpath 下存在某个类时，这个配置才生效。（比如只有你引入了 mysql-connector-java，MySQL 的自动配置才会生效）。
+      * `@ConditionalOnMissingBean`：只有当容器里没有这个 Bean 时，才使用默认配置。（这保证了如果你自己写了配置类，Spring Boot 就不会用自己的默认配置覆盖你）。
+      * 大白话：拿着名单一个个核对，“这个项目里有没有 Redis 的包？没有，Redis 配置划掉。”“有没有引入 Web 模块？有，Tomcat 配置保留。”
+* 第三步：进容器（`@Import` 导入）经过筛选后，剩下的就是当前项目真正需要的配置类。最后，@Import 注解会把这些过滤后的配置类，一次性注册到 Spring 的 IOC 容器中。
+
+
+## 关键组件大白话解释
+* `@EnableAutoConfiguration`:自动装配的总开关。加上它，Spring Boot才会去尝试加载那些自动配置类。
+* `@AutoConfigurationImportSelector`:采购经理。负责去`spring.factories` 拿名单，并执行筛选逻辑，决定哪些配置类能够被采纳
+* `sping.factories` /`.imports` : 里面记录了所有可能被加载的自动装配类目录
+* `@Conditional` 系类注解：挡在配置类前面，只有满足特定条件(比如没有某个类、有没有某个环境变量)的类才能安全通过安检进入Spring容器
+
+## 避坑与面试金句
+避坑：如果你想让 Spring Boot 的某个自动配置失效（比如不想让它自动配置数据源），可以在 `@SpringBootApplication` 注解里使用 exclude 属性，例如 `@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})`。
+面试金句：自动装配的核心在于“按需加载”。它通过 @Import 导入选择器拿到全量配置名单，再利用 @Conditional 系列注解根据当前项目的依赖环境进行精准过滤，最终只把有用的配置注册到容器中，既实现了开箱即用，又保证了高度的灵活性。
+
+
+## 自测题目与参考回答
+
+* Q1 Spring Boot 的自动配置类是在什么时候被加载的？
+* A1 是在 Spring 容器刷新的早期阶段。当处理到启动类上的`@EnableAutoConfiguration` 注解时，会通过 `@Import` 导入的 `AutoConfigurationImportSelector` 类，去加载并筛选自动配置类，然后将它们注册到容器中
+* Q2：如果我自己定义了一个 Bean，Spring Boot 还会自动配置这个 Bean 吗？
+* A2 通常不会。因为 `Spring Boot` 的绝大多数自动配置类上，都标注了 `@ConditionalOnMissingBean` 注解。它的意思是，只有当容器里还没有这个类型的 Bean 时，才会使用自动配置的默认 Bean。这完美保证了开发者自定义配置的优先级。
+* Q3：spring.factories 在自动装配中起了什么作用？
+* A3：参考回答：它充当了自动配置类的“登记簿”。Spring Boot 启动时，会通过 SPI 机制扫描所有 JAR 包下的 `spring.factories` 文件，找到 `EnableAutoConfiguration` 键对应的所有配置类，从而知道有哪些自动配置类可以被加载。
+
+
+## 最佳回答模块
+Spring Boot 自动装配的核心原理可以总结为‘基于注解的按需加载’。
+首先，启动类上的 @SpringBootApplication 注解包含了一个 `@EnableAutoConfiguration` 注解，它是自动装配的入口。这个注解通过 `@Import` 导入了一个核心类 `AutoConfigurationImportSelector`。
+在容器启动时，这个选择器会做两件事：
+第一，它会利用 SPI 机制，去扫描类路径下所有 JAR 包里的 spring.factories 文件，拿到一份包含上百个自动配置类的全量名单。
+第二，它会对这份名单进行严格的筛选。这些自动配置类上都带有大量的 `@Conditional` 系列注解（比如 `@ConditionalOnClass`、`@ConditionalOnMissingBean` 等）。Spring Boot 会根据当前项目的 classpath 依赖、环境变量以及容器中已有的 Bean，来判断这些条件是否成立。
+最终，只有那些条件匹配成功的配置类，才会被真正加载并注册到 Spring 的 IOC 容器中。这样既实现了‘开箱即用’，又避免了不必要的 Bean 创建，同时也允许开发者通过自定义 Bean 来覆盖默认配置
