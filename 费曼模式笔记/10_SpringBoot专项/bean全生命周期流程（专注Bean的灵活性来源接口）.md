@@ -7,13 +7,13 @@
 
 
          
-      *  执行 `BeanPostProcessor` 的 `postProcessBeforeInitialization` 你可以理解为类似Bom对象的成熟的提升触发的前置操作 这是初始化前的最后一个“加工站”。`BeanPostProcessor` 是一个强大的扩展接口，它的 `postProcessBeforeInitialization` 方法会在这个时机被调用。你可以在这里对 Bean 进行任何自定义的修改Spring AOP 的代理对象，很多时候就是在这里被创建并替换掉原始 Bean 的。    
+*  执行 `BeanPostProcessor` 的 `postProcessBeforeInitialization` 你可以理解为类似Bom对象的成熟的提升触发的前置操作 这是初始化前的最后一个“加工站”。`BeanPostProcessor` 是一个强大的扩展接口，它的 `postProcessBeforeInitialization` 方法会在这个时机被调用。你可以在这里对 Bean 进行任何自定义的修改Spring AOP 的代理对象，很多时候就是在这里被创建并替换掉原始 Bean 的。    
   
   
              
-      *  执行 `@PostConstruct` 注解的方法 这是最常用的初始化回调方法。当你的 Bean 上某个方法被 `@PostConstruct` 标记后，Spring 会确保它在 Bean 完成所有属性注入后、但在正式投入使用前执行。此时 Bean 的所有属性都已经被正确注入，是安全的。  
-      *   执行 `InitializingBean` 接口的 `afterPropertiesSet` 方法 这和 `@PostConstruct` 的作用类似，是 Spring 原生提供的一种初始化回调方式。如果一个 Bean 实现了 `InitializingBean` 接口，Spring 就会调用它的 `afterPropertiesSet` 方法。  **注意InitializingBean 现在已经不推荐使用了，它的作用和@PostConstruct类似但是侵入性太强，其次两者也不能同时使用，否则会出错**
-      *   执行自定义的 init-method 这是你在 XML 配置或通过 @Bean(initMethod = "...") 指定的初始化方法。它的执行顺序在 `@PostConstruct` 和 `afterPropertiesSet` 之后。  
-      *   执行 `BeanPostProcessor` 的 `postProcessAfterInitialization` 这是初始化阶段的最后一道工序。`BeanPostProcessor` 的 `postProcessAfterInitialization`  方法会被调用。同样可以对 Bean 进行加工。AOP 的代理对象也可能在这里被创建。经过这一步，Bean 就从一个“调试完毕的空壳车”，变成了一辆“可以正式交付的成品车”。它被放入一级缓存 (singletonObjects)，随时准备被使用。  
+*  执行 `@PostConstruct` 注解的方法 这是最常用的初始化回调方法。当你的 Bean 上某个方法被 `@PostConstruct` 标记后，Spring 会确保它在 Bean 完成所有属性注入后、但在正式投入使用前执行。此时 Bean 的所有属性都已经被正确注入，是安全的。  
+*   执行 `InitializingBean` 接口的 `afterPropertiesSet` 方法 这和 `@PostConstruct` 的作用类似，是 Spring 原生提供的一种初始化回调方式。如果一个 Bean 实现了 `InitializingBean` 接口，Spring 就会调用它的 `afterPropertiesSet` 方法。  **注意InitializingBean 现在已经不推荐使用了，它的作用和@PostConstruct类似但是侵入性太强，其次两者也不能同时使用，否则会出错**
+*   执行自定义的 init-method 这是你在 XML 配置或通过 @Bean(initMethod = "...") 指定的初始化方法。它的执行顺序在 `@PostConstruct` 和 `afterPropertiesSet` 之后。  
+*   执行 `BeanPostProcessor` 的 `postProcessAfterInitialization` 这是初始化阶段的最后一道工序。`BeanPostProcessor` 的 `postProcessAfterInitialization`  方法会被调用。同样可以对 Bean 进行加工。AOP 的代理对象也可能在这里被创建。经过这一步，Bean 就从一个“调试完毕的空壳车”，变成了一辆“可以正式交付的成品车”。它被放入一级缓存 (singletonObjects)，随时准备被使用。  
 * 使用 (`In Use`)：车辆交付，随时待命
 * 销毁 (`Destruction`)：车辆报废，回收资源。 如果 Bean 实现了 `DisposableBean` 接口，Spring 会调用其 `destroy()` 方法。如果 Bean 通过 @Bean(destroyMethod = "...") 或 XML 指定了销毁方法，Spring 也会调用它。  
