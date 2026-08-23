@@ -265,6 +265,133 @@ ORDER BY o.amount DESC;
 
 ---
 
+## 7. 🧪 Explain 专项：怎么看执行计划（2026-08-11）
+
+> 这一章把前面所有索引/回表/filesort的知识，用 Explain 这面「体检报告」串起来。
+> 面试必考：给一条慢 SQL，让你 Explain 并指出问题、给出优化方案。
+
+### 7.1 Explain 是什么
+
+```sql
+EXPLAIN SELECT * FROM orders WHERE status = 'PAID';
+```
+
+MySQL 不真正执行，而是让优化器「纸上谈兵」，告诉你：走哪个索引、估扫几行、要不要回表、要不要排序。
+
+**8 个核心列：**
+
+| 列 | 含义 | 重点 |
+|----|------|------|
+| **type** | 访问类型（最重要） | ALL最差→const最好 |
+| **key** | 实际用到的索引 | NULL=没用索引 |
+| **key_len** | 索引使用长度 | 联合索引用了几个字段 |
+| **rows** | 预估扫描行数 | 越小越好 |
+| **ref** | 用哪个列去匹配索引 | JOIN时看 |
+| **filtered** | 过滤比例 | 越高越好 |
+| **Extra** | 额外信息 | 藏着性能杀手 |
+| possible_keys | 可能用的索引 | |
+
+### 7.2 type 从好到差（背诵）
+
+```
+const > eq_ref > ref > range > index > ALL
+```
+
+| type | 含义 | 场景 |
+|------|------|------|
+| const | 主键/唯一索引等值 | `WHERE id=5` 最优 |
+| eq_ref | 被驱动表走主键/唯一索引 | JOIN 被驱动表 |
+| ref | 普通索引等值 | `WHERE status='PAID'` |
+| range | 索引范围 | `>、<、BETWEEN、IN` |
+| index | 扫全索引 | 比ALL快但也要扫 |
+| ALL | 全表扫描 | 最差，必须优化 |
+
+> 目标：type 至少 range，最好 ref 以上。
+
+### 7.3 Extra 关键标记
+
+| Extra | 含义 | 评价 |
+|-------|------|------|
+| Using index | 覆盖索引，不回表 | ✅ 最佳 |
+| Using index condition | 索引下推 ICP | ✅ 好事 |
+| Using where | Server层二次过滤 | ⚠️ 正常但配合type看 |
+| Using filesort | 额外排序 | ❌ 优化点 |
+| Using temporary | 临时表 | ❌❌ 最该优化 |
+
+### 7.4 杀手1：Using filesort 破解
+
+```sql
+-- 有索引 idx_status(status)
+EXPLAIN SELECT * FROM orders WHERE status='PAID' ORDER BY created_at;
+-- Extra: Using filesort ← created_at 不在索引里
+```
+
+破解：让排序列进联合索引
+```sql
+ALTER TABLE orders ADD INDEX idx_status_time(status, created_at);
+-- 再查 → 无 filesort
+```
+
+⚠️ 排序方向必须一致：`ORDER BY a ASC, b ASC` 走索引；`a ASC, b DESC` 触发 filesort。
+
+### 7.5 杀手2：Using temporary 破解
+
+GROUP BY / DISTINCT 常用临时表：
+```sql
+EXPLAIN SELECT status, COUNT(*) FROM orders GROUP BY status;
+-- Extra: Using temporary; Using filesort
+```
+破解：GROUP BY 列进索引。
+
+### 7.6 联合索引最左前缀 + 范围坑
+
+索引 (a,b,c)：
+
+```sql
+WHERE a=1 AND b=2 AND c=3   -- ✅ 用满3列
+WHERE a=1 AND b=2           -- ✅ 用2列
+WHERE b=2 AND c=3           -- ❌ 跳过a全部失效
+WHERE a=1 AND c=3           -- ⚠️ 只用a（b断c废）
+WHERE a>1 AND b=2           -- ⚠️ 只用a（范围后b失效）
+```
+
+**规律：从最左列连续用；范围查询（>、<、BETWEEN）后面的列索引失效。**
+
+### 7.7 SQL 优化 7 口诀
+
+1. 避免 `SELECT *`，配合覆盖索引
+2. 避免函数包索引列：`DATE(create)` → 改范围 `create>='..' AND create<'..'`
+3. 避免隐式类型转换：`card_no = 123`（VARCHAR比INT）不走索引
+4. LIKE 前导通配 `'%abc'` 不走索引；`'abc%'` 走
+5. 深分页：`LIMIT 1000000,10` 改延迟关联
+6. OR 两边都有索引才走，否则改 UNION
+7. JOIN 小表驱动大表，被驱动表连接字段建索引
+
+深分页经典优化：
+```sql
+-- 慢：扫100万行
+SELECT * FROM t ORDER BY id LIMIT 1000000, 10;
+-- 快：延迟关联
+SELECT * FROM t JOIN (SELECT id FROM t ORDER BY id LIMIT 1000000,10) tmp
+ON t.id = tmp.id;
+```
+
+### 7.8 Explain 自测（复习时遮答案）
+
+**Q: type=ALL 说明什么？怎么优化？**
+A: (全表扫描。查WHERE条件列是否缺索引、是否有函数/隐式转换包裹索引列、是否LIKE前导%) 
+
+**Q: Extra 里 Using filesort 怎么消掉？**
+A: (让 ORDER BY / GROUP BY 列进联合索引；排序方向一致；避免多列方向不一致)
+
+**Q: 联合索引 (a,b,c)，WHERE a>1 AND b=2 走索引吗？**
+A: (只走a。a是范围，后面的b、c索引失效 → type=range)
+
+**Q: 如何判断一条SQL是否回表？**
+A: (看 Extra 是否 Using index。没有 Using index 且 type 不是 const → 通常要回表)
+
+---
+
 ## 🔗 关联知识
 
 - [[03_Java_集合框架]] (B+Tree 和 HashMap/红黑树的对比)
