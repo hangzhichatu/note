@@ -17,3 +17,24 @@
 *   执行 `BeanPostProcessor` 的 `postProcessAfterInitialization` 这是初始化阶段的最后一道工序。`BeanPostProcessor` 的 `postProcessAfterInitialization`  方法会被调用。同样可以对 Bean 进行加工。AOP 的代理对象也可能在这里被创建。经过这一步，Bean 就从一个“调试完毕的空壳车”，变成了一辆“可以正式交付的成品车”。它被放入一级缓存 (singletonObjects)，随时准备被使用。  
 * 使用 (`In Use`)：车辆交付，随时待命
 * 销毁 (`Destruction`)：车辆报废，回收资源。 如果 Bean 实现了 `DisposableBean` 接口，Spring 会调用其 `destroy()` 方法。如果 Bean 通过 @Bean(destroyMethod = "...") 或 XML 指定了销毁方法，Spring 也会调用它。  
+
+---
+
+## 订正 + 补充（2026-09-21 学习追加）
+
+### ⚠️ 订正：AOP 代理只在 `postProcessAfterInitialization` 生成
+> 原文在 `postProcessBeforeInitialization` 处写了"Spring AOP 的代理对象，很多时候就是在这里被创建并替换掉原始 Bean 的"——**这不准确**。
+>
+> **实际 AOP 代理在 `postProcessAfterInitialization`（初始化【之后】）生成。** 前置处理 `postProcessBeforeInitialization` 一般用于 `@PostConstruct` 前的准备工作，**不做代理替换**。
+>
+> 干这件事的是 `AbstractAutoProxyCreator`：Bean 完全初始化后，检查"要不要被切"，需要就用 `ProxyFactory` 生成代理，**替换容器里的原始对象**。
+
+### 为什么这个时机很重要（面试考点）
+1. **同类自调用 `@Transactional` 失效** → `this.b()` 走的是原始对象，不是代理
+2. **`@Transactional` 必须 public** → CGLIB 重写的是 public 方法
+3. **构造器注入的循环依赖更难搞** → 因为依赖在被初始化之前就要，而代理在初始化之后才生成
+
+### 与事务、AOP 的关联
+> 事务的 `@Transactional` 本质是 AOP，AOP 的代理又是在 Bean 生命周期的"初始化后置处理"里生成的。
+> **所以：Bean 生命周期是理解 AOP / 事务失效的"时间轴"。**
+> 详见 [[00_IoC与AOP精讲]] 第 2.4 节、[[03Spring事务深度剖析]] 第十节。  
