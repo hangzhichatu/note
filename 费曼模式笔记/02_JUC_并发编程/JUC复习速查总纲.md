@@ -1,7 +1,7 @@
 # JUC 并发复习笔记（2026-08-30 李）
 
 > 模式：周末集中 + 概念准确性优先
-> 已有分册笔记：AQS原理与ReentrantLock / HashMap&ConcurrentHashMap / 线程池相关 / 自定义线程池
+> 已有分册笔记：AQS原理与ReentrantLock / HashMap&ConcurrentHashMap / 线程池相关 / 自定义线程池 / CAS与原子类详解(2026-09-06) / 高并发写一致性术语选型(2026-09-06)
 > 本笔记为**速查总纲**，把散点连成线
 
 ---
